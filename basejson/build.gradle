@@ -6,7 +6,7 @@ def siteUrl = 'https://github.com/kongzue/BaseJson' //项目在github主页地�
 def gitUrl = 'https://github.com/kongzue/BaseJson.git'   //Git仓库的地址
 
 group = "com.kongzue.basejson"//发布aar前缀根节点
-version = "1.0.0"//发布aar的库版本
+version = "1.0.1"//发布aar的库版本
 
 android {
     compileSdkVersion 30
@@ -15,7 +15,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
     }
 
     buildTypes {
@@ -39,7 +39,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'baseokhttp_v3'//添加项目描述
+                name 'basejson'//添加项目描述
                 url siteUrl
                 licenses {
                     license {
@@ -71,7 +71,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "BaseOkHttp_v3" //项目在JCenter的名字
+        name = "BaseJson" //项目在JCenter的名字
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]

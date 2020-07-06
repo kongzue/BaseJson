@@ -1,4 +1,4 @@
-package com.kongzue.basejson;
+package com.kongzue.baseokhttp.util;
 
 import org.json.JSONArray;
 
