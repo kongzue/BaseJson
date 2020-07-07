@@ -6,7 +6,7 @@ def siteUrl = 'https://github.com/kongzue/BaseJson' //项目在github主页地�
 def gitUrl = 'https://github.com/kongzue/BaseJson.git'   //Git仓库的地址
 
 group = "com.kongzue.basejson"//发布aar前缀根节点
-version = "1.0.1"//发布aar的库版本
+version = "1.0.3"//发布aar的库版本
 
 android {
     compileSdkVersion 30
@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.3"
     }
 
     buildTypes {
@@ -38,7 +38,7 @@ install {
         // This generates POM.xml with proper parameters
         pom {
             project {
-                packaging 'aar'
+                packaging 'jar'
                 name 'basejson'//添加项目描述
                 url siteUrl
                 licenses {

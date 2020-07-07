@@ -55,7 +55,7 @@ public class JsonUtil {
             return (JsonMap) deCodeJson(jsonStr);
         } catch (Exception e) {
             loge("参数不是一个合法的jsonObject：" + jsonStr);
-            return null;
+            return new JsonMap();
         }
     }
     
@@ -74,7 +74,7 @@ public class JsonUtil {
             return result;
         } catch (Exception e) {
             loge("不是一个合法的json：" + jsonStr);
-            return null;
+            return new JsonList();
         }
     }
     

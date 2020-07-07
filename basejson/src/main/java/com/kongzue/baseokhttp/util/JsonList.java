@@ -3,6 +3,9 @@ package com.kongzue.baseokhttp.util;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: @Kongzue
@@ -15,6 +18,12 @@ public class JsonList extends ArrayList {
     
     public JsonList() {
     
+    }
+    
+    public JsonList(List list) {
+        for (Object value : list) {
+            set(value);
+        }
     }
     
     public static JsonList parse(String jsonObjString) {

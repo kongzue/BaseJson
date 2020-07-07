@@ -4,8 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,6 +23,14 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     
     }
     
+    public JsonMap(Map map) {
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            Object value = map.get(key);
+            set(key, value);
+        }
+    }
+    
     public static JsonMap parse(String jsonObjString) {
         return JsonUtil.deCodeJsonObject(jsonObjString);
     }
@@ -32,7 +42,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     
     public String getString(String key, String defaultValue) {
         Object value = get(key);
-        if (isNull(String.valueOf(value))){
+        if (isNull(String.valueOf(value))) {
             return defaultValue;
         }
         return value == null ? "" : String.valueOf(value);
