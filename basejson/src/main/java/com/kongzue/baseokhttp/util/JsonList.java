@@ -20,6 +20,23 @@ public class JsonList extends ArrayList {
     
     }
     
+    public JsonList(String jsonStr) {
+        try {
+            JSONArray jsonArray = new JSONArray(jsonStr);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String o = String.valueOf(jsonArray.get(i));
+                if (o.startsWith("{")) {
+                    set(new JsonMap(o));
+                }else if (o.startsWith("[")){
+                    set(new JsonList(o));
+                } else {
+                    set(o);
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     public JsonList(List list) {
         for (Object value : list) {
             set(value);
@@ -27,7 +44,7 @@ public class JsonList extends ArrayList {
     }
     
     public static JsonList parse(String jsonObjString) {
-        return JsonUtil.deCodeJsonArray(jsonObjString);
+        return new JsonList(jsonObjString);
     }
     
     public String getString(int index) {

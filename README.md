@@ -2,10 +2,10 @@
 基于 org.json 的改进型 Json 解析库，快速解析 Json 为 Map 或 List 对象。
 
 <a href="https://github.com/kongzue/BaseJson/">
-<img src="https://img.shields.io/badge/BaseJson-1.0.3-green.svg" alt="BaseOkHttp">
+<img src="https://img.shields.io/badge/BaseJson-1.0.4-green.svg" alt="BaseOkHttp">
 </a>
-<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.3/link">
-<img src="https://img.shields.io/badge/Maven-1.0.3-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.4/link">
+<img src="https://img.shields.io/badge/Maven-1.0.4-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -25,7 +25,7 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.basejson</groupId>
   <artifactId>basejson</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <type>pom</type>
 </dependency>
 ```
@@ -33,7 +33,7 @@ Gradle：
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.basejson:basejson:1.0.3'
+implementation 'com.kongzue.basejson:basejson:1.0.4'
 ```
 
 ## 概念
@@ -140,6 +140,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ## 更新日志
+v1.0.4：
+- 删除了 JsonUtil 工具类，改为 JsonMap 和 JsonList 的构造方法创建；
+
 v1.0.3：
 - 增加通过 Map 和 List 创建 JsonMap、JsonList 的构造方法；
 

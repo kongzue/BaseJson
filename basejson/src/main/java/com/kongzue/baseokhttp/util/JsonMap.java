@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,28 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     
     }
     
+    public JsonMap(String jsonStr) {
+        try{
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            Iterator keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = keys.next() + "";
+                String value = jsonObject.optString(key);
+                if (value.startsWith("{")) {
+                    JsonMap object = new JsonMap(value);
+                    put(key, object == null ? value : object);
+                } else if (value.startsWith("[")) {
+                    JsonList array = new JsonList(value);
+                    put(key, array == null ? value : array);
+                } else {
+                    put(key, value);
+                }
+            }
+        }catch (Exception e){
+        
+        }
+    }
+    
     public JsonMap(Map map) {
         Set<String> keys = map.keySet();
         for (String key : keys) {
@@ -32,7 +54,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     }
     
     public static JsonMap parse(String jsonObjString) {
-        return JsonUtil.deCodeJsonObject(jsonObjString);
+        return new JsonMap(jsonObjString);
     }
     
     public String getString(String key) {
