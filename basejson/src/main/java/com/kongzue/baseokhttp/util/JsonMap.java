@@ -19,12 +19,20 @@ import java.util.Set;
  */
 public class JsonMap extends LinkedHashMap<String, Object> {
     
+    /**
+     * 创建一个空的 JsonMap 对象
+     */
     public JsonMap() {
     
     }
     
+    /**
+     * 通过 Json 文本创建 JsonMap 对象
+     *
+     * @param jsonStr Json 文本
+     */
     public JsonMap(String jsonStr) {
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             Iterator keys = jsonObject.keys();
             while (keys.hasNext()) {
@@ -40,11 +48,16 @@ public class JsonMap extends LinkedHashMap<String, Object> {
                     put(key, value);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         
         }
     }
     
+    /**
+     * 通过 Map 创建 JsonMap 对象
+     *
+     * @param map Map 实例化对象
+     */
     public JsonMap(Map map) {
         Set<String> keys = map.keySet();
         for (String key : keys) {
@@ -53,6 +66,12 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         }
     }
     
+    /**
+     * 通过 Json 文本静态方法创建 JsonMap 对象
+     *
+     * @param jsonObjString Json 文本
+     * @return 创建的 JsonMap 对象
+     */
     public static JsonMap parse(String jsonObjString) {
         return new JsonMap(jsonObjString);
     }
@@ -171,6 +190,11 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         return this;
     }
     
+    /**
+     * 输出 Json 文本
+     *
+     * @return Json 文本
+     */
     @Override
     public String toString() {
         return getJsonObj().toString();

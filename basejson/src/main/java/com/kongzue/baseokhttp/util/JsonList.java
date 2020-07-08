@@ -16,10 +16,18 @@ import java.util.Set;
  */
 public class JsonList extends ArrayList {
     
+    /**
+     * 创建一个空的 JsonList 对象
+     */
     public JsonList() {
     
     }
     
+    /**
+     * 通过 Json 文本创建 JsonList 对象
+     *
+     * @param jsonStr Json 文本
+     */
     public JsonList(String jsonStr) {
         try {
             JSONArray jsonArray = new JSONArray(jsonStr);
@@ -27,7 +35,7 @@ public class JsonList extends ArrayList {
                 String o = String.valueOf(jsonArray.get(i));
                 if (o.startsWith("{")) {
                     set(new JsonMap(o));
-                }else if (o.startsWith("[")){
+                } else if (o.startsWith("[")) {
                     set(new JsonList(o));
                 } else {
                     set(o);
@@ -37,12 +45,23 @@ public class JsonList extends ArrayList {
         }
     }
     
+    /**
+     * 通过 List 创建 JsonList 对象
+     *
+     * @param list List 实例化对象
+     */
     public JsonList(List list) {
         for (Object value : list) {
             set(value);
         }
     }
     
+    /**
+     * 通过 Json 文本静态方法创建 JsonList 对象
+     *
+     * @param jsonObjString Json 文本
+     * @return 创建的 JsonList 对象
+     */
     public static JsonList parse(String jsonObjString) {
         return new JsonList(jsonObjString);
     }
@@ -153,6 +172,11 @@ public class JsonList extends ArrayList {
         return this;
     }
     
+    /**
+     * 输出 Json 文本
+     *
+     * @return Json 文本
+     */
     @Override
     public String toString() {
         return getJsonArray().toString();
