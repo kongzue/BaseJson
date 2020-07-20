@@ -16,8 +16,9 @@
 
 ## 简介
 - 将 Json 转换为 Map 或 List 的子类，可直接用于 Adapter，省去编写 Bean 的过程。
-- 高容错设计，无论如何绝不会出现空指针，哪怕类型错误，你也无须担心空指针异常；
-- 无缝衔接 Map 和 List，可随意通过 Map 或 List 创建 Json 对象；
+- 高容错设计，使用自定义 get 方法，无论如何绝不会出现空指针，哪怕类型错误，你也无须担心空指针异常；
+- 无缝衔接 Map 和 List，可随意通过 Map 或 List 直接转换为 Json 对象；
+- 借助 Map 和 List 的优势，`.isEmpty()`判空，`KeySet()`遍历、`Collections.sort()`排序等操作帮助你轻松完成解析。
 
 ## Maven仓库或Gradle的引用方式
 Maven仓库：
