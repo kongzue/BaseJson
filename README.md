@@ -120,6 +120,8 @@ String list = data.getList("list")
                   .getJsonMap(0)
                   .getInt("limitMoney");    //返回 26
 ```
+可见，在 BaseJson 中，类型并不是绝对的，不同类型可以进行“软”转换，以获得最符合预期的解析结果。
+
 你无需担心任何来自后端的异常情况，使用 BaseJson 解析都可以保证绝对不会出现空指针异常。
 
 ## 输出 Json 文本
