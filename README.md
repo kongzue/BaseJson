@@ -52,15 +52,15 @@ JsonMap 是 Map 的子类，JsonList 是 List 的子类，本身各自具备 Map
 
 使用以下代码将 Json 文本解析为 JsonMap：
 ```
-JsonMap data = JsonMap.parse("{\"key\":\"DFG1H56EH5JN3DFA\",\"token\":\"124ASFD53SDF65aSF47fgT211\"}");
+JsonMap data = new JsonMap("{\"key\":\"DFG1H56EH5JN3DFA\",\"token\":\"124ASFD53SDF65aSF47fgT211\"}");
 ```
 
 使用以下代码将 Json 文本解析为 JsonList：
 ```
-JsonList list = JsonList.parse("[{\"answerId\":\"98\",\"questionDesc\":\"否\"},{\"answerId\":\"99\",\"questionDesc\":\"是\"}]");
+JsonList list = new JsonList("[{\"answerId\":\"98\",\"questionDesc\":\"否\"},{\"answerId\":\"99\",\"questionDesc\":\"是\"}]");
 ```
 
-若 Json 文本不合法，或内容有错误，则可能返回空内容的 JsonMap/JsonList。
+若 Json 文本不合法，或内容有错误，则可能返回 **空内容** 的 JsonMap/JsonList。
 
 ## 读取值
 使用 JsonMap 和 JsonList 定义的 getString(key)、getBoolean(key) 等方法不会读取空指针。
