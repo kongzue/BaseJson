@@ -77,7 +77,7 @@ JsonList list = new JsonList("[{\"answerId\":\"98\",\"questionDesc\":\"否\"},{\
 JsonMap data = JsonMap.parse("{\"key\":\"DFG1H56EH5JN3DFA\",\"token\":\"124ASFD53SDF65aSF47fgT211\"}");
 
 String key = data.getString("key");                     //获得“key”的值
-String name = data.getString("name");                   //显然，这段 json 并没有“name”
+String name = data.getString("name");                   //显然，这段 json 并没有“name”字段
 JsonMap data = data.getJsonMap("data");                 //这段 json 中没有名为“data”的子 json 对象
 String age = data.getJsonMap("data").getInt("age");     //更不可能有“data”下的值“age”
 ```
