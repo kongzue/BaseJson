@@ -90,8 +90,8 @@ age = 0
 ```
 对于默认状态可能为 0 的 int 类型的值，或本身可能为 "" 的 String 类型的值，可以使用如下方法来设置 defaultValue：
 ```
-String name = data.getString("name", "zhangsan");           //设置若为空，则返回 “zhangsan”
-String age = data.getJsonMap("data").getInt("age", -1);     //设置若为空，则返回 -1
+String name = data.getString("name", "zhangsan");           //若该字段为空，则返回 “zhangsan”
+String age = data.getJsonMap("data").getInt("age", -1);     //若该字段为空，则返回 -1
 ```
 
 弹性设计是为了避免不必要的空指针问题，但同时也兼顾判空的麻烦情况，减少代码所需要对空指针的额外判断。
