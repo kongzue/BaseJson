@@ -104,6 +104,7 @@ String age = data.getJsonMap("data").getInt("age", -1);     //若该字段为空
     "token":"124ASFD53SDF65aSF47fgT211",
     "name":null,
     "data":[],
+    "list":"[{"limitMoney\":\"26\",\"discountMoney\":\"3\"},{\"limitMoney\":\"40\",\"discountMoney\":\"4\"}]"
     "age":"3",
     "signed":"true",
 }
@@ -111,9 +112,13 @@ String age = data.getJsonMap("data").getInt("age", -1);     //若该字段为空
 对于上述 Json，与服务端约定 data 应为 Json 对象而非集合、name 应该有值但给出为 null、age 和 signed 的类型不对，使用本框架按照以下代码，依然能够正常解析：
 ```
 String name = data.getString("name");       //返回 “” 空值
-JsonMap data = data.getJsonMap("data");     //返回 new JsonMap()
+JsonMap data = data.getJsonMap("data");     //返回空的 JsonMap 对象，可使用 isEmpty() 判空
 int age = data.getInt("age");               //返回 3
 boolean signed = data.getBoolean("signed"); //返回 true
+JsonList list = data.getList("list");       //返回解析为 JsonList 的对象
+String list = data.getList("list")
+                  .getJsonMap(0)
+                  .getInt("limitMoney");    //返回 26
 ```
 你无需担心任何来自后端的异常情况，使用 BaseJson 解析都可以保证绝对不会出现空指针异常。
 
