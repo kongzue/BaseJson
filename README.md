@@ -76,14 +76,16 @@ JsonList list = new JsonList("[{\"answerId\":\"98\",\"questionDesc\":\"否\"},{\
 ```
 JsonMap data = JsonMap.parse("{\"key\":\"DFG1H56EH5JN3DFA\",\"token\":\"124ASFD53SDF65aSF47fgT211\"}");
 
-String name = data.getString("name");
-JsonMap data = data.getJsonMap("data");
-String age = data.getJsonMap("data").getInt("age");
+String key = data.getString("key");                     //获得“key”的值
+String name = data.getString("name");                   //显然，这段 json 并没有“name”
+JsonMap data = data.getJsonMap("data");                 //这段 json 中没有名为“data”的子 json 对象
+String age = data.getJsonMap("data").getInt("age");     //更不可能有“data”下的值“age”
 ```
 上述 get 方法均不会报空指针错误，而是会获得该类型的默认空值，即：
 ```
+key = "DFG1H56EH5JN3DFA"
 name = ""
-data = new JsonMap() 
+data = new JsonMap()    //返回空的 JsonMap 对象，可使用 isEmpty() 判空
 age = 0
 ```
 对于默认状态可能为 0 的 int 类型的值，或本身可能为 "" 的 String 类型的值，可以使用如下方法来设置 defaultValue：
