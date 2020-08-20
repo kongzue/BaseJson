@@ -1,5 +1,7 @@
 package com.kongzue.baseokhttp.util;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Author: @Kongzue
@@ -17,7 +20,21 @@ import java.util.Set;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/1/16 17:57
  */
-public class JsonMap extends LinkedHashMap<String, Object> {
+public class JsonMap extends ConcurrentHashMap<String, Object> {
+    
+    /**
+     * 预解析开关
+     *
+     * 开启此功能将在通过 String 文本创建 JsonMap/JsonList 的一开始就对所有内容进行逐级解析，
+     * 可以有效增加解析速度，例如在网络请求的异步线程先解析后返回主线程即可直接读取内部的值。
+     * 但这有可能带来一些问题：
+     * 例如对于文本 "objData":"{sdf123R.4:98}"，该值可能在预解析时由于 org.json 的影响，
+     * 被认为是一个 JsonObject，此时若 .getString("objData")则可能返回错误的结果：
+     * {"sdf123R.4":"98"}
+     * 值的内容被添加了引号，这显然不符合预期。
+     * 关闭预解析开关可以避免此问题，但也会带来解析过程性能的损失。
+     */
+    public static boolean preParsing = true;
     
     /**
      * 创建一个空的 JsonMap 对象
@@ -38,13 +55,17 @@ public class JsonMap extends LinkedHashMap<String, Object> {
             while (keys.hasNext()) {
                 String key = keys.next() + "";
                 String value = jsonObject.optString(key);
-                if (value.startsWith("{")) {
-                    JsonMap object = new JsonMap(value);
-                    put(key, object == null ? value : object);
-                } else if (value.startsWith("[")) {
-                    JsonList array = new JsonList(value);
-                    put(key, array == null ? value : array);
-                } else {
+                if (preParsing){
+                    if (value.startsWith("{") && value.endsWith("}")) {
+                        JsonMap object = new JsonMap(value);
+                        put(key, object.isEmpty() ? value : object);
+                    } else if (value.startsWith("[") && value.endsWith("]")) {
+                        JsonList array = new JsonList(value);
+                        put(key, array.isEmpty() ? value : array);
+                    } else {
+                        put(key, value);
+                    }
+                }else{
                     put(key, value);
                 }
             }
@@ -77,8 +98,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     }
     
     public String getString(String key) {
-        Object value = get(key);
-        return value == null ? "" : value + "";
+        return getString(key, "");
     }
     
     public String getString(String key, String defaultValue) {
@@ -170,7 +190,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     public JsonList getList(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonList() : (JsonList) value;
+            return value == null ? new JsonList() : new JsonList(String.valueOf(value));
         } catch (Exception e) {
             return new JsonList();
         }
@@ -179,7 +199,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     public JsonMap getJsonMap(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonMap() : (JsonMap) value;
+            return value == null ? new JsonMap() : new JsonMap(String.valueOf(value));
         } catch (Exception e) {
             return new JsonMap();
         }
@@ -219,7 +239,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
                 }
             }
         } catch (Exception e) {
-        
+            e.printStackTrace();
         }
         return main;
     }

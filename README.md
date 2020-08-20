@@ -2,10 +2,10 @@
 基于 org.json 的改进型 Json 解析库，快速解析 Json 为 Map 或 List 对象。
 
 <a href="https://github.com/kongzue/BaseJson/">
-<img src="https://img.shields.io/badge/BaseJson-1.0.4-green.svg" alt="BaseOkHttp">
+<img src="https://img.shields.io/badge/BaseJson-1.0.5-green.svg" alt="BaseOkHttp">
 </a>
-<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.4/link">
-<img src="https://img.shields.io/badge/Maven-1.0.4-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.5/link">
+<img src="https://img.shields.io/badge/Maven-1.0.5-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -16,6 +16,7 @@
 
 ## 简介
 - 将 Json 转换为 Map 或 List 的子类，可直接用于 Adapter，省去编写 Bean 的过程。
+- JsonMap 也可轻松与 JavaBean 互相转换。
 - 高容错设计，使用自定义 get 方法，无论如何绝不会出现空指针，哪怕类型错误，你也无须担心空指针异常；
 - 无缝衔接 Map 和 List，可随意通过 Map 或 List 直接转换为 Json 对象；
 - 借助 Map 和 List 的优势，`.isEmpty()`判空，`KeySet()`遍历、`Collections.sort()`排序等操作帮助你轻松完成解析。
@@ -26,7 +27,7 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.basejson</groupId>
   <artifactId>basejson</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <type>pom</type>
 </dependency>
 ```
@@ -34,7 +35,7 @@ Gradle：
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.basejson:basejson:1.0.4'
+implementation 'com.kongzue.basejson:basejson:1.0.5'
 ```
 
 ## 概念
@@ -43,6 +44,8 @@ implementation 'com.kongzue.basejson:basejson:1.0.4'
 对于 Json 对象，为 JsonMap，对于 Json 集合，为 JsonList。
 
 JsonMap 是 Map 的子类，JsonList 是 List 的子类，本身各自具备 Map、List 的特点，适用于一切 Map、List 的使用场景。
+
+可通过 JsonBean 工具类，实现 JavaBean 与 JsonMap 之间的互相转换，这里使用了反射技术。
 
 在 get 值时，建议使用 JsonMap 和 JsonList 定义的 getString(key)、getBoolean(key) 等方法，使用 Map、List 原本的 get 依然可能获得空对象（null）。
 
@@ -133,6 +136,32 @@ JsonMap data = ...;
 String jsonObj = data.toString();
 ```
 
+## JsonMap 与 JavaBean 的互相转换
+
+使用 JsonBean 工具类，实现 JavaBean 与 JsonMap 之间的互相转换，这里使用了反射技术。
+
+请注意编译为 release 时的混淆设置，必须 keep 所有项目中用到的 JavaBean 及 com.kongzue.baseokhttp.util 下的工具类，否则可能在运行时出现问题。
+
+### 由 JsonMap 转换为 JavaBean
+
+例如现在已经有一个 JavaBean 对象 User，以及对应的数据 jsonMap，则：
+```
+User user = JsonBean.getBean(jsonMap, User.class);
+```
+即可将 jsonMap 中的数据对应到 User 类中。
+
+请注意，JavaBean 对象中必须包含每个属性的对应 get、set 方法，且必须使用驼峰命名规则。
+
+支持 boolean 类型的数据获取方法以“is”开头的命名方式，例如“boolean isVIP()”或者“boolean getVIP()”都可以。
+
+### 由 JavaBean 转换为 JsonMap
+
+此时已经有一个设置好数据的 User 对象 user，要转换为 JsonMap：
+```
+JsonMap userJson = JsonBean.setBean(user);
+```
+转换后即可获得 JsonMap 对象。
+
 ## 开源协议
 ```
 Copyright Kongzue BaseJson
@@ -150,6 +179,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ## 更新日志
+v1.0.5:
+- 新增 JsonBean 工具类用于将 JsonMap 与 JavaBean 互相转换；
+- 改进 JsonMap 与 JsonList，在 JsonMap 中新增加了 preParsing(boolean) 开关用于决定是否预解析数据；
+- JsonList 修改继承父类 SimpleArrayList，以提高构建性能并改善内存占用；
+- 修复了一些解析逻辑上的 bug；
+
 v1.0.4：
 - 删除了 JsonUtil 工具类，改为 JsonMap 和 JsonList 的构造方法创建；
 

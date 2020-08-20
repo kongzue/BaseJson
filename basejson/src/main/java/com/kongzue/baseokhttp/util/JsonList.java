@@ -2,10 +2,8 @@ package com.kongzue.baseokhttp.util;
 
 import org.json.JSONArray;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
 
 /**
  * Author: @Kongzue
@@ -14,7 +12,7 @@ import java.util.Set;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/1/16 18:16
  */
-public class JsonList extends ArrayList {
+public class JsonList extends SimpleArrayList {
     
     /**
      * 创建一个空的 JsonList 对象
@@ -31,12 +29,19 @@ public class JsonList extends ArrayList {
     public JsonList(String jsonStr) {
         try {
             JSONArray jsonArray = new JSONArray(jsonStr);
+            grow(jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 String o = String.valueOf(jsonArray.get(i));
-                if (o.startsWith("{")) {
-                    set(new JsonMap(o));
-                } else if (o.startsWith("[")) {
-                    set(new JsonList(o));
+                if (preParsing) {
+                    if (o.startsWith("{") && o.endsWith("}")) {
+                        JsonMap value = new JsonMap(o);
+                        set(value.isEmpty() ? o : value);
+                    } else if (o.startsWith("[") && o.endsWith("]")) {
+                        JsonList value = new JsonList(o);
+                        set(value.isEmpty() ? o : value);
+                    } else {
+                        set(o);
+                    }
                 } else {
                     set(o);
                 }
@@ -67,8 +72,15 @@ public class JsonList extends ArrayList {
     }
     
     public String getString(int index) {
+        return getString(index, "");
+    }
+    
+    public String getString(int index, String defaultValue) {
         Object value = get(index);
-        return value == null ? "" : value + "";
+        if (isNull(String.valueOf(value))) {
+            return defaultValue;
+        }
+        return value == null ? "" : String.valueOf(value);
     }
     
     public int getInt(int index) {
@@ -152,7 +164,7 @@ public class JsonList extends ArrayList {
     public JsonList getList(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonList() : (JsonList) value;
+            return value == null ? new JsonList() : new JsonList(String.valueOf(value));
         } catch (Exception e) {
             return new JsonList();
         }
@@ -161,7 +173,7 @@ public class JsonList extends ArrayList {
     public JsonMap getJsonMap(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonMap() : (JsonMap) value;
+            return value == null ? new JsonMap() : new JsonMap(String.valueOf(value));
         } catch (Exception e) {
             return new JsonMap();
         }
@@ -202,5 +214,12 @@ public class JsonList extends ArrayList {
         
         }
         return main;
+    }
+    
+    private boolean isNull(String s) {
+        if (s == null || s.trim().isEmpty() || "null".equals(s)) {
+            return true;
+        }
+        return false;
     }
 }
