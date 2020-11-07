@@ -24,7 +24,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     
     /**
      * 预解析开关
-     *
+     * <p>
      * 开启此功能将在通过 String 文本创建 JsonMap/JsonList 的一开始就对所有内容进行逐级解析，
      * 可以有效增加解析速度，例如在网络请求的异步线程先解析后返回主线程即可直接读取内部的值。
      * 但这有可能带来一些问题：
@@ -55,7 +55,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             while (keys.hasNext()) {
                 String key = keys.next() + "";
                 String value = jsonObject.optString(key);
-                if (preParsing){
+                if (preParsing) {
                     if (value.startsWith("{") && value.endsWith("}")) {
                         JsonMap object = new JsonMap(value);
                         put(key, object.isEmpty() ? value : object);
@@ -65,7 +65,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                     } else {
                         put(key, value);
                     }
-                }else{
+                } else {
                     put(key, value);
                 }
             }
@@ -210,6 +210,12 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         return this;
     }
     
+    @Override
+    public Object put(String key, Object value) {
+        if (value == null) value = "";
+        return super.put(key, value);
+    }
+    
     /**
      * 输出 Json 文本
      *
@@ -264,5 +270,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        return toString().equals(o.toString());
     }
 }

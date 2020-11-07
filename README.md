@@ -27,7 +27,7 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.basejson</groupId>
   <artifactId>basejson</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -35,7 +35,7 @@ Gradle：
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.basejson:basejson:1.0.5'
+implementation 'com.kongzue.basejson:basejson:1.0.6'
 ```
 
 ## 概念
@@ -179,7 +179,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ## 更新日志
+v1.0.6:
+
+- 新增`equals`用于判断两个 JsonList 与 JsonMap 是否相同（数据顺序也许一致）；
+- JsonMap 在`set(key, value)`的 value 为空时，自动转为 String 空值以防止 Map 抛出空指针异常；
+
 v1.0.5:
+
 - 新增 JsonBean 工具类用于将 JsonMap 与 JavaBean 互相转换；
 - 改进 JsonMap 与 JsonList，在 JsonMap 中新增加了 preParsing(boolean) 开关用于决定是否预解析数据；
 - JsonList 修改继承父类 SimpleArrayList，以提高构建性能并改善内存占用；
@@ -192,4 +198,5 @@ v1.0.3：
 - 增加通过 Map 和 List 创建 JsonMap、JsonList 的构造方法；
 
 v1.0.2：
+
 - 全新发布；

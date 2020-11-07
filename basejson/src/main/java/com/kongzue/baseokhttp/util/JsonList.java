@@ -222,4 +222,9 @@ public class JsonList extends SimpleArrayList {
         }
         return false;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        return toString().equals(o.toString());
+    }
 }
