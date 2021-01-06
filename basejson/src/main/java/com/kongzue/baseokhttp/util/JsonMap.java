@@ -190,7 +190,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public JsonList getList(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonList() : new JsonList(String.valueOf(value));
+            return value == null ? new JsonList() : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
         } catch (Exception e) {
             return new JsonList();
         }
@@ -199,7 +199,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public JsonMap getJsonMap(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonMap() : new JsonMap(String.valueOf(value));
+            return value == null ? new JsonMap() : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
         } catch (Exception e) {
             return new JsonMap();
         }

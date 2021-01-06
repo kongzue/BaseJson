@@ -2,10 +2,10 @@
 基于 org.json 的改进型 Json 解析库，快速解析 Json 为 Map 或 List 对象。
 
 <a href="https://github.com/kongzue/BaseJson/">
-<img src="https://img.shields.io/badge/BaseJson-1.0.5-green.svg" alt="BaseOkHttp">
+<img src="https://img.shields.io/badge/BaseJson-1.0.7-green.svg" alt="BaseOkHttp">
 </a>
-<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.5/link">
-<img src="https://img.shields.io/badge/Maven-1.0.5-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.7/link">
+<img src="https://img.shields.io/badge/Maven-1.0.7-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
@@ -27,7 +27,7 @@ Maven仓库：
 <dependency>
   <groupId>com.kongzue.basejson</groupId>
   <artifactId>basejson</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
   <type>pom</type>
 </dependency>
 ```
@@ -35,7 +35,7 @@ Gradle：
 
 在dependencies{}中添加引用：
 ```
-implementation 'com.kongzue.basejson:basejson:1.0.6'
+implementation 'com.kongzue.basejson:basejson:1.0.7'
 ```
 
 ## 概念
@@ -179,6 +179,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ## 更新日志
+v1.0.7:
+
+- 对于已预解析的 JsonMap 在 getJsonMap() 时的问题处理；
+
 v1.0.6:
 
 - 新增`equals`用于判断两个 JsonList 与 JsonMap 是否相同（数据顺序也许一致）；

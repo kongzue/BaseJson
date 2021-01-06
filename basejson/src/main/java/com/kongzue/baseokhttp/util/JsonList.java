@@ -3,6 +3,7 @@ package com.kongzue.baseokhttp.util;
 import org.json.JSONArray;
 
 import java.util.List;
+
 import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
 
 /**
@@ -164,7 +165,7 @@ public class JsonList extends SimpleArrayList {
     public JsonList getList(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonList() : new JsonList(String.valueOf(value));
+            return value == null ? new JsonList() : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
         } catch (Exception e) {
             return new JsonList();
         }
@@ -173,7 +174,7 @@ public class JsonList extends SimpleArrayList {
     public JsonMap getJsonMap(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonMap() : new JsonMap(String.valueOf(value));
+            return value == null ? new JsonMap() : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
         } catch (Exception e) {
             return new JsonMap();
         }
