@@ -15,11 +15,17 @@ import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
  */
 public class JsonList extends SimpleArrayList {
     
+    public boolean privateParsing = true;
+    
     /**
      * 创建一个空的 JsonList 对象
      */
     public JsonList() {
+        privateParsing = preParsing;
+    }
     
+    public JsonList(boolean preParsing) {
+        privateParsing = preParsing;
     }
     
     /**
@@ -28,12 +34,38 @@ public class JsonList extends SimpleArrayList {
      * @param jsonStr Json 文本
      */
     public JsonList(String jsonStr) {
+        privateParsing = preParsing;
         try {
             JSONArray jsonArray = new JSONArray(jsonStr);
             grow(jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 String o = String.valueOf(jsonArray.get(i));
-                if (preParsing) {
+                if (privateParsing) {
+                    if (o.startsWith("{") && o.endsWith("}")) {
+                        JsonMap value = new JsonMap(o);
+                        set(value.isEmpty() ? o : value);
+                    } else if (o.startsWith("[") && o.endsWith("]")) {
+                        JsonList value = new JsonList(o);
+                        set(value.isEmpty() ? o : value);
+                    } else {
+                        set(o);
+                    }
+                } else {
+                    set(o);
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+    public JsonList(String jsonStr, boolean preParsing) {
+        privateParsing = preParsing;
+        try {
+            JSONArray jsonArray = new JSONArray(jsonStr);
+            grow(jsonArray.length());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String o = String.valueOf(jsonArray.get(i));
+                if (privateParsing) {
                     if (o.startsWith("{") && o.endsWith("}")) {
                         JsonMap value = new JsonMap(o);
                         set(value.isEmpty() ? o : value);
@@ -57,6 +89,14 @@ public class JsonList extends SimpleArrayList {
      * @param list List 实例化对象
      */
     public JsonList(List list) {
+        privateParsing = preParsing;
+        for (Object value : list) {
+            set(value);
+        }
+    }
+    
+    public JsonList(List list, boolean preParsing) {
+        privateParsing = preParsing;
         for (Object value : list) {
             set(value);
         }
@@ -70,6 +110,10 @@ public class JsonList extends SimpleArrayList {
      */
     public static JsonList parse(String jsonObjString) {
         return new JsonList(jsonObjString);
+    }
+    
+    public static JsonList parse(String jsonObjString, boolean preParsing) {
+        return new JsonList(jsonObjString, preParsing);
     }
     
     public String getString(int index) {

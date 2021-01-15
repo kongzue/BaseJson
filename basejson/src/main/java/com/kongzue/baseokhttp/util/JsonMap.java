@@ -36,11 +36,17 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
      */
     public static boolean preParsing = true;
     
+    public boolean privateParsing = true;
+    
     /**
      * 创建一个空的 JsonMap 对象
      */
     public JsonMap() {
+        privateParsing = preParsing;
+    }
     
+    public JsonMap(boolean preParsing) {
+        privateParsing = preParsing;
     }
     
     /**
@@ -49,13 +55,41 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
      * @param jsonStr Json 文本
      */
     public JsonMap(String jsonStr) {
+        privateParsing = preParsing;
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             Iterator keys = jsonObject.keys();
             while (keys.hasNext()) {
                 String key = keys.next() + "";
                 String value = jsonObject.optString(key);
-                if (preParsing) {
+                if (privateParsing) {
+                    if (value.startsWith("{") && value.endsWith("}")) {
+                        JsonMap object = new JsonMap(value);
+                        put(key, object.isEmpty() ? value : object);
+                    } else if (value.startsWith("[") && value.endsWith("]")) {
+                        JsonList array = new JsonList(value);
+                        put(key, array.isEmpty() ? value : array);
+                    } else {
+                        put(key, value);
+                    }
+                } else {
+                    put(key, value);
+                }
+            }
+        } catch (Exception e) {
+        
+        }
+    }
+    
+    public JsonMap(String jsonStr, boolean preParsing) {
+        privateParsing = preParsing;
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            Iterator keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = keys.next() + "";
+                String value = jsonObject.optString(key);
+                if (privateParsing) {
                     if (value.startsWith("{") && value.endsWith("}")) {
                         JsonMap object = new JsonMap(value);
                         put(key, object.isEmpty() ? value : object);
@@ -80,6 +114,16 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
      * @param map Map 实例化对象
      */
     public JsonMap(Map map) {
+        privateParsing = preParsing;
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            Object value = map.get(key);
+            set(key, value);
+        }
+    }
+    
+    public JsonMap(Map map, boolean preParsing) {
+        privateParsing = preParsing;
         Set<String> keys = map.keySet();
         for (String key : keys) {
             Object value = map.get(key);
@@ -95,6 +139,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
      */
     public static JsonMap parse(String jsonObjString) {
         return new JsonMap(jsonObjString);
+    }
+    
+    public static JsonMap parse(String jsonObjString, boolean preParsing) {
+        return new JsonMap(jsonObjString, preParsing);
     }
     
     public String getString(String key) {
