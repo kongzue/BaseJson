@@ -22,16 +22,27 @@
 - 借助 Map 和 List 的优势，`.isEmpty()`判空，`KeySet()`遍历、`Collections.sort()`排序等操作帮助你轻松完成解析。
 
 ## Maven仓库或Gradle的引用方式
-Maven仓库：
+
+#### jitPack
+
+在项目根目录的 build.gradle(Project) 添加:
 ```
-<dependency>
-  <groupId>com.kongzue.basejson</groupId>
-  <artifactId>basejson</artifactId>
-  <version>1.0.7</version>
-  <type>pom</type>
-</dependency>
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
-Gradle：
+
+在 build.gradle(app) 添加:
+```
+dependencies {
+        implementation 'com.github.kongzue:BaseJson:Tag'
+}
+```
+
+#### jCenter（已停止服务）：
 
 在dependencies{}中添加引用：
 ```
