@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+apply plugin: 'android-maven'
 
 def siteUrl = 'https://github.com/kongzue/BaseJson' //项目在github主页地址
 def gitUrl = 'https://github.com/kongzue/BaseJson.git'   //Git仓库的地址
@@ -25,32 +25,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                // Applies the component for the release build variant.
-                from components.release
-
-                // You can then customize attributes of the publication as shown below.
-                groupId = 'com.kongzue.basejson'
-                artifactId = 'kongzue'
-                version = '1.0.2'
-            }
-            // Creates a Maven publication called “debug”.
-            debug(MavenPublication) {
-                // Applies the component for the debug build variant.
-                from components.debug
-
-                groupId = 'com.kongzue.basejson'
-                artifactId = 'kongzue'
-                version = '1.0.2'
-            }
-        }
     }
 }
 
