@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 
 def siteUrl = 'https://github.com/kongzue/BaseJson' //项目在github主页地址
 def gitUrl = 'https://github.com/kongzue/BaseJson.git'   //Git仓库的地址
@@ -28,7 +27,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '29.0.2'
 }
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -70,19 +68,7 @@ install {
 }
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "BaseJson" //项目在JCenter的名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
+
 dependencies {
 
 }
