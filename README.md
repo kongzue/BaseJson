@@ -35,10 +35,12 @@ allprojects {
 }
 ```
 
+![](https://jitpack.io/v/kongzue/BaseJson.svg)
+
 在 build.gradle(app) 添加:
 ```
 dependencies {
-        implementation 'com.github.kongzue:BaseJson:Tag'
+        implementation 'com.github.kongzue:BaseJson:1.0.7.1'
 }
 ```
 
