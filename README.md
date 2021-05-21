@@ -40,7 +40,7 @@ allprojects {
 在 build.gradle(app) 添加:
 ```
 dependencies {
-        implementation 'com.github.kongzue:BaseJson:1.0.7.1'
+        implementation 'com.github.kongzue:BaseJson:1.0.7.2'
 }
 ```
 

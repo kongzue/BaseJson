@@ -232,7 +232,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Float.parseFloat(get(key) + "");
         } catch (Exception e) {
         }
-        return emptyValue;
+        return result;
     }
     
     public JsonList getList(String key) {
