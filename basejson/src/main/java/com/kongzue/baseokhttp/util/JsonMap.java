@@ -164,10 +164,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public int getInt(String key, int emptyValue) {
         int result = emptyValue;
         try {
-            result = Integer.parseInt(get(key) + "");
+            return Integer.parseInt(get(key) + "");
         } catch (Exception e) {
         }
-        return result == 0 ? emptyValue : result;
+        return result;
     }
     
     public boolean getBoolean(String key) {
@@ -177,10 +177,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public boolean getBoolean(String key, boolean emptyValue) {
         boolean result = emptyValue;
         try {
-            result = Boolean.parseBoolean(get(key) + "");
+            return Boolean.parseBoolean(get(key) + "");
         } catch (Exception e) {
         }
-        return result == false ? emptyValue : result;
+        return result;
     }
     
     public long getLong(String key) {
@@ -190,10 +190,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public long getLong(String key, long emptyValue) {
         long result = emptyValue;
         try {
-            result = Long.parseLong(get(key) + "");
+            return Long.parseLong(get(key) + "");
         } catch (Exception e) {
         }
-        return result == 0 ? emptyValue : result;
+        return result;
     }
     
     public short getShort(String key) {
@@ -203,10 +203,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public short getShort(String key, short emptyValue) {
         short result = emptyValue;
         try {
-            result = Short.parseShort(get(key) + "");
+            return Short.parseShort(get(key) + "");
         } catch (Exception e) {
         }
-        return result == 0?emptyValue:result;
+        return result;
     }
     
     public double getDouble(String key) {
@@ -216,10 +216,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public double getDouble(String key, double emptyValue) {
         double result = emptyValue;
         try {
-            result = Double.parseDouble(get(key) + "");
+            return Double.parseDouble(get(key) + "");
         } catch (Exception e) {
         }
-        return result==0?emptyValue:result;
+        return result;
     }
     
     public float getFloat(String key) {
@@ -229,10 +229,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public float getFloat(String key, float emptyValue) {
         float result = emptyValue;
         try {
-            result = Float.parseFloat(get(key) + "");
+            return Float.parseFloat(get(key) + "");
         } catch (Exception e) {
         }
-        return result==0?emptyValue:result;
+        return result;
     }
     
     public JsonList getList(String key) {
