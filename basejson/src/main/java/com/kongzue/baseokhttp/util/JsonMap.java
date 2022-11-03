@@ -167,7 +167,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Integer.parseInt(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result == 0 ? emptyValue : result;
     }
     
     public boolean getBoolean(String key) {
@@ -180,7 +180,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Boolean.parseBoolean(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result == false ? emptyValue : result;
     }
     
     public long getLong(String key) {
@@ -193,7 +193,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Long.parseLong(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result == 0 ? emptyValue : result;
     }
     
     public short getShort(String key) {
@@ -206,7 +206,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Short.parseShort(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result == 0?emptyValue:result;
     }
     
     public double getDouble(String key) {
@@ -219,7 +219,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Double.parseDouble(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result==0?emptyValue:result;
     }
     
     public float getFloat(String key) {
@@ -232,7 +232,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             result = Float.parseFloat(get(key) + "");
         } catch (Exception e) {
         }
-        return result;
+        return result==0?emptyValue:result;
     }
     
     public JsonList getList(String key) {

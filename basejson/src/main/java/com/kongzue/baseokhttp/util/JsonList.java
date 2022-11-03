@@ -272,4 +272,12 @@ public class JsonList extends SimpleArrayList {
     public boolean equals(Object o) {
         return toString().equals(o.toString());
     }
+    
+    @Override
+    public Object get(int index) {
+        if (index < 0 || index >= size()) {
+            return null;
+        }
+        return super.get(index);
+    }
 }
