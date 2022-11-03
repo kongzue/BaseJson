@@ -4,9 +4,12 @@
 <a href="https://github.com/kongzue/BaseJson/">
 <img src="https://img.shields.io/badge/BaseJson-1.0.7-green.svg" alt="BaseOkHttp">
 </a>
-<a href="https://bintray.com/myzchh/maven/BaseJson/1.0.7/link">
-<img src="https://img.shields.io/badge/Maven-1.0.7-blue.svg" alt="Maven">
-</a>
+<a href="https://github.com/kongzue/BaseJson/releases">
+<img src="https://img.shields.io/github/v/release/kongzue/BaseJson?color=green" alt="Maven">
+</a> 
+<a href="https://jitpack.io/#kongzue/BaseJson">
+<img src="https://jitpack.io/v/kongzue/BaseJson.svg" alt="Jitpack.io">
+</a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
 </a>
@@ -23,7 +26,7 @@
 
 ## Maven仓库或Gradle的引用方式
 
-#### jitPack
+### jitPack
 
 在项目根目录的 build.gradle(Project) 添加:
 ```
@@ -35,7 +38,11 @@ allprojects {
 }
 ```
 
-![](https://jitpack.io/v/kongzue/BaseJson.svg)
+#### 最新版本：
+
+<a href="https://jitpack.io/#kongzue/BaseJson">
+<img src="https://jitpack.io/v/kongzue/BaseJson.svg" alt="Jitpack.io">
+</a> 
 
 在 build.gradle(app) 添加:
 ```
@@ -192,28 +199,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ## 更新日志
-v1.0.7:
 
-- 对于已预解析的 JsonMap 在 getJsonMap() 时的问题处理；
-
-v1.0.6:
-
-- 新增`equals`用于判断两个 JsonList 与 JsonMap 是否相同（数据顺序也许一致）；
-- JsonMap 在`set(key, value)`的 value 为空时，自动转为 String 空值以防止 Map 抛出空指针异常；
-
-v1.0.5:
-
-- 新增 JsonBean 工具类用于将 JsonMap 与 JavaBean 互相转换；
-- 改进 JsonMap 与 JsonList，在 JsonMap 中新增加了 preParsing(boolean) 开关用于决定是否预解析数据；
-- JsonList 修改继承父类 SimpleArrayList，以提高构建性能并改善内存占用；
-- 修复了一些解析逻辑上的 bug；
-
-v1.0.4：
-- 删除了 JsonUtil 工具类，改为 JsonMap 和 JsonList 的构造方法创建；
-
-v1.0.3：
-- 增加通过 Map 和 List 创建 JsonMap、JsonList 的构造方法；
-
-v1.0.2：
-
-- 全新发布；
+请前往 [Release Page](https://github.com/kongzue/BaseJson/releases) 查看
