@@ -119,6 +119,8 @@ String age = data.getJsonMap("data").getInt("age", -1);     //若该字段为空
 
 弹性设计是为了避免不必要的空指针问题，但同时也兼顾判空的麻烦情况，减少代码所需要对空指针的额外判断。
 
+#### 在 JsonList 中查找
+
 对于 JsonList，要寻找其中**含有**已知 key=value 的 JsonMap，可使用 `.findJsonMap(key, value)` 来寻找其中符合结果的 JsonMap，例如：
 ```java
 //查找某个符合 key=value 的结果：
