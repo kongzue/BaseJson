@@ -280,4 +280,16 @@ public class JsonList extends SimpleArrayList {
         }
         return super.get(index);
     }
+    
+    public JsonMap findJsonMap(String key, Object value) {
+        for (int i = 0; i < size(); i++) {
+            Object child = get(i);
+            if (child instanceof JsonMap) {
+                if (((JsonMap) child).get(key).equals(value)) {
+                    return (JsonMap) child;
+                }
+            }
+        }
+        return new JsonMap();
+    }
 }
