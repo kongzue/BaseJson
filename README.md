@@ -1,6 +1,6 @@
 # BaseJson
 
-基于 org.json 的改进型 Json 解析库，快速解析 Json 为 Map 或 List 对象。
+基于 org.json 的改进型 Json 解析库，快速解析 Json 为 Map 或 List 对象，甚至直接由 JsonList 创建列表可用的适配器。
 
 <a href="https://github.com/kongzue/BaseJson/">
 <img src="https://img.shields.io/badge/BaseJson-1.0.7-green.svg" alt="BaseOkHttp">
