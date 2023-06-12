@@ -247,6 +247,11 @@ JsonMap userJson = JsonBean.setBean(user);
 
 JsonListAdapter 旨在帮助开发者快速并轻松的完成网络请求下来的 json 数据集到界面 UI 构建的过程，只需要对应好 json 数据集（JsonList）中每个 json 数据（JsonMap）中的键值对中的键（key），与制作布局时为其对应的 View 设置好一样的 `android:tag` 属性，即可完成数据对应绑定显示到 UI。
 
+```java
+JsonListAdapter adapter = new JsonListAdapter(me, R.layout.item_my_order_list, orderList);
+listView.setAdapter(adapter);
+```
+
 JsonListAdapter 只需要指定上下文（context）、列表项布局资源ID（layoutResId）以及数据集（JsonList）即可自动根据 JsonList 的元素 JsonMap 中 key 对应在列表项布局中对应 tag 的 View 进行关系绑定，并直接为其赋值。
 
 > **TextView 自动绑定:**
@@ -276,8 +281,6 @@ JsonListAdapter adapter = new JsonListAdapter(me, R.layout.item_my_order_list, o
       //...
     }
 };
-
-listView.setAdapter(adapter);
 ```
 
 还有两个事件可供重写：
