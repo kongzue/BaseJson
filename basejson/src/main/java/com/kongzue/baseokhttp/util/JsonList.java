@@ -6,6 +6,11 @@ import java.util.List;
 
 import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
 
+import android.content.Context;
+
+import com.kongzue.baseokhttp.util.adapter.JsonListAdapter;
+import com.kongzue.baseokhttp.util.interfaces.JsonMapPreprocessingEvents;
+
 /**
  * Author: @Kongzue
  * Github: https://github.com/kongzue/
@@ -14,20 +19,20 @@ import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
  * CreateTime: 2019/1/16 18:16
  */
 public class JsonList extends SimpleArrayList {
-    
+
     public boolean privateParsing = true;
-    
+
     /**
      * 创建一个空的 JsonList 对象
      */
     public JsonList() {
         privateParsing = preParsing;
     }
-    
+
     public JsonList(boolean preParsing) {
         privateParsing = preParsing;
     }
-    
+
     /**
      * 通过 Json 文本创建 JsonList 对象
      *
@@ -55,9 +60,10 @@ public class JsonList extends SimpleArrayList {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    
+
     public JsonList(String jsonStr, boolean preParsing) {
         privateParsing = preParsing;
         try {
@@ -82,7 +88,7 @@ public class JsonList extends SimpleArrayList {
         } catch (Exception e) {
         }
     }
-    
+
     /**
      * 通过 List 创建 JsonList 对象
      *
@@ -94,14 +100,14 @@ public class JsonList extends SimpleArrayList {
             set(value);
         }
     }
-    
+
     public JsonList(List list, boolean preParsing) {
         privateParsing = preParsing;
         for (Object value : list) {
             set(value);
         }
     }
-    
+
     /**
      * 通过 Json 文本静态方法创建 JsonList 对象
      *
@@ -111,15 +117,15 @@ public class JsonList extends SimpleArrayList {
     public static JsonList parse(String jsonObjString) {
         return new JsonList(jsonObjString);
     }
-    
+
     public static JsonList parse(String jsonObjString, boolean preParsing) {
         return new JsonList(jsonObjString, preParsing);
     }
-    
+
     public String getString(int index) {
         return getString(index, "");
     }
-    
+
     public String getString(int index, String defaultValue) {
         Object value = get(index);
         if (isNull(String.valueOf(value))) {
@@ -127,11 +133,11 @@ public class JsonList extends SimpleArrayList {
         }
         return value == null ? "" : String.valueOf(value);
     }
-    
+
     public int getInt(int index) {
         return getInt(index, 0);
     }
-    
+
     public int getInt(int index, int emptyValue) {
         int result = emptyValue;
         try {
@@ -140,11 +146,11 @@ public class JsonList extends SimpleArrayList {
         }
         return result;
     }
-    
+
     public boolean getBoolean(int index) {
         return getBoolean(index, false);
     }
-    
+
     public boolean getBoolean(int index, boolean emptyValue) {
         boolean result = emptyValue;
         try {
@@ -153,11 +159,11 @@ public class JsonList extends SimpleArrayList {
         }
         return result;
     }
-    
+
     public long getLong(int index) {
         return getLong(index, 0);
     }
-    
+
     public long getLong(int index, long emptyValue) {
         long result = emptyValue;
         try {
@@ -166,11 +172,11 @@ public class JsonList extends SimpleArrayList {
         }
         return result;
     }
-    
+
     public short getShort(int index) {
         return getShort(index, (short) 0);
     }
-    
+
     public short getShort(int index, short emptyValue) {
         short result = emptyValue;
         try {
@@ -179,11 +185,11 @@ public class JsonList extends SimpleArrayList {
         }
         return result;
     }
-    
+
     public double getDouble(int index) {
         return getDouble(index, 0);
     }
-    
+
     public double getDouble(int index, double emptyValue) {
         double result = emptyValue;
         try {
@@ -192,11 +198,11 @@ public class JsonList extends SimpleArrayList {
         }
         return result;
     }
-    
+
     public float getFloat(int index) {
         return getFloat(index, 0);
     }
-    
+
     public float getFloat(int index, float emptyValue) {
         float result = emptyValue;
         try {
@@ -205,7 +211,7 @@ public class JsonList extends SimpleArrayList {
         }
         return emptyValue;
     }
-    
+
     public JsonList getList(int index) {
         Object value = get(index);
         try {
@@ -214,7 +220,7 @@ public class JsonList extends SimpleArrayList {
             return new JsonList();
         }
     }
-    
+
     public JsonMap getJsonMap(int index) {
         Object value = get(index);
         try {
@@ -223,12 +229,12 @@ public class JsonList extends SimpleArrayList {
             return new JsonMap();
         }
     }
-    
+
     public JsonList set(Object value) {
         super.add(value);
         return this;
     }
-    
+
     /**
      * 输出 Json 文本
      *
@@ -238,12 +244,12 @@ public class JsonList extends SimpleArrayList {
     public String toString() {
         return getJsonArray().toString();
     }
-    
+
     public JSONArray getJsonArray() {
         JSONArray main = null;
         try {
             main = new JSONArray();
-            
+
             for (int i = 0; i < size(); i++) {
                 Object item = get(i);
                 if (item instanceof JsonMap) {
@@ -254,25 +260,25 @@ public class JsonList extends SimpleArrayList {
                     main.put(item);
                 }
             }
-            
+
         } catch (Exception e) {
-        
+
         }
         return main;
     }
-    
+
     private boolean isNull(String s) {
         if (s == null || s.trim().isEmpty() || "null".equals(s)) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         return toString().equals(o.toString());
     }
-    
+
     @Override
     public Object get(int index) {
         if (index < 0 || index >= size()) {
@@ -280,16 +286,30 @@ public class JsonList extends SimpleArrayList {
         }
         return super.get(index);
     }
-    
+
     public JsonMap findJsonMap(String key, Object value) {
         for (int i = 0; i < size(); i++) {
             Object child = get(i);
             if (child instanceof JsonMap) {
-                if (((JsonMap) child).get(key).equals(value)) {
+                if (((JsonMap) child).getString(key).equals(String.valueOf(value))) {
                     return (JsonMap) child;
                 }
             }
         }
         return new JsonMap();
+    }
+
+    public JsonListAdapter createAdapter(Context context, int layoutResId) {
+        return new JsonListAdapter(context, layoutResId, this);
+    }
+
+    public JsonList preprocessedJsonMapData(JsonMapPreprocessingEvents events) {
+        for (Object data : this) {
+            if (data instanceof JsonMap) {
+                JsonMap jsonMap = (JsonMap) data;
+                events.processingData(jsonMap);
+            }
+        }
+        return this;
     }
 }

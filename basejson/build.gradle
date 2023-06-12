@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+
 android {
     compileSdkVersion 30
 
@@ -6,8 +7,8 @@ android {
         minSdkVersion 14
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
-        versionCode 12
-        versionName "1.1.2"
+        versionCode 13
+        versionName "1.2.0"
     }
 
     buildTypes {
