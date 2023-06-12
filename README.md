@@ -243,7 +243,7 @@ JsonMap userJson = JsonBean.setBean(user);
 
 ## 由 JsonList 直接生成适配器 Adapter
 
-可以使用 JsonList 的方法直接生成可用于列表等组件的适配器 JsonListAdapter，也可以通过构造方法构建。
+可以使用 JsonList 的方法 `.createAdapter(context, layoutResId)` 直接生成可用于列表等组件的适配器 JsonListAdapter，也可以通过构造方法构建。
 
 JsonListAdapter 旨在帮助开发者快速并轻松的完成网络请求下来的 json 数据集到界面 UI 构建的过程，只需要对应好 json 数据集（JsonList）中每个 json 数据（JsonMap）中的键值对中的键（key），与制作布局时为其对应的 View 设置好一样的 `android:tag` 属性，即可完成数据对应绑定显示到 UI。
 
