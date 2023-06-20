@@ -60,7 +60,7 @@ public class JsonList extends SimpleArrayList {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 
