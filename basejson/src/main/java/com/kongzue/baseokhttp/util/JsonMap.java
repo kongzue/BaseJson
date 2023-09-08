@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * CreateTime: 2019/1/16 17:57
  */
 public class JsonMap extends ConcurrentHashMap<String, Object> {
-    
+
     /**
      * 预解析开关
      * <p>
@@ -35,20 +35,20 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
      * 关闭预解析开关可以避免此问题，但也会带来解析过程性能的损失。
      */
     public static boolean preParsing = true;
-    
+
     public boolean privateParsing = true;
-    
+
     /**
      * 创建一个空的 JsonMap 对象
      */
     public JsonMap() {
         privateParsing = preParsing;
     }
-    
+
     public JsonMap(boolean preParsing) {
         privateParsing = preParsing;
     }
-    
+
     /**
      * 通过 Json 文本创建 JsonMap 对象
      *
@@ -77,10 +77,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                 }
             }
         } catch (Exception e) {
-        
+
         }
     }
-    
+
     public JsonMap(String jsonStr, boolean preParsing) {
         privateParsing = preParsing;
         try {
@@ -104,10 +104,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                 }
             }
         } catch (Exception e) {
-        
+
         }
     }
-    
+
     /**
      * 通过 Map 创建 JsonMap 对象
      *
@@ -121,7 +121,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             set(key, value);
         }
     }
-    
+
     public JsonMap(Map map, boolean preParsing) {
         privateParsing = preParsing;
         Set<String> keys = map.keySet();
@@ -130,7 +130,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
             set(key, value);
         }
     }
-    
+
     /**
      * 通过 Json 文本静态方法创建 JsonMap 对象
      *
@@ -140,15 +140,15 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public static JsonMap parse(String jsonObjString) {
         return new JsonMap(jsonObjString);
     }
-    
+
     public static JsonMap parse(String jsonObjString, boolean preParsing) {
         return new JsonMap(jsonObjString, preParsing);
     }
-    
+
     public String getString(String key) {
         return getString(key, "");
     }
-    
+
     public String getString(String key, String defaultValue) {
         Object value = get(key);
         if (isNull(String.valueOf(value))) {
@@ -156,11 +156,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return value == null ? "" : String.valueOf(value);
     }
-    
+
     public int getInt(String key) {
         return getInt(key, 0);
     }
-    
+
     public int getInt(String key, int emptyValue) {
         int result = emptyValue;
         try {
@@ -169,11 +169,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public boolean getBoolean(String key) {
         return getBoolean(key, false);
     }
-    
+
     public boolean getBoolean(String key, boolean emptyValue) {
         boolean result = emptyValue;
         try {
@@ -182,11 +182,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public long getLong(String key) {
         return getLong(key, 0);
     }
-    
+
     public long getLong(String key, long emptyValue) {
         long result = emptyValue;
         try {
@@ -195,11 +195,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public short getShort(String key) {
         return getShort(key, (short) 0);
     }
-    
+
     public short getShort(String key, short emptyValue) {
         short result = emptyValue;
         try {
@@ -208,11 +208,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public double getDouble(String key) {
         return getDouble(key, 0);
     }
-    
+
     public double getDouble(String key, double emptyValue) {
         double result = emptyValue;
         try {
@@ -221,11 +221,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public float getFloat(String key) {
         return getFloat(key, 0);
     }
-    
+
     public float getFloat(String key, float emptyValue) {
         float result = emptyValue;
         try {
@@ -234,36 +234,38 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return result;
     }
-    
+
     public JsonList getList(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonList() : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
+            return value == null ? new JsonList().preBuild(key, this) : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
         } catch (Exception e) {
-            return new JsonList();
+            return new JsonList().preBuild(key, this);
         }
     }
-    
+
     public JsonMap getJsonMap(String key) {
         Object value = get(key);
         try {
-            return value == null ? new JsonMap() : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
+            return value == null ? new JsonMap().preBuild(key, this) : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
         } catch (Exception e) {
-            return new JsonMap();
+            return new JsonMap().preBuild(key, this);
         }
     }
-    
+
     public JsonMap set(String key, Object value) {
+        callParentRelease();
         put(key, value);
         return this;
     }
-    
+
     @Override
     public Object put(String key, Object value) {
+        callParentRelease();
         if (value == null) value = "";
         return super.put(key, value);
     }
-    
+
     /**
      * 输出 Json 文本
      *
@@ -273,12 +275,12 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     public String toString() {
         return getJsonObj().toString();
     }
-    
+
     public JSONObject getJsonObj() {
         JSONObject main = null;
         try {
             main = new JSONObject();
-            
+
             Set<String> keys = keySet();
             for (String key : keys) {
                 Object value = get(key);
@@ -297,7 +299,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return main;
     }
-    
+
     private JSONArray getListValue(List valueList) {
         JSONArray array = new JSONArray();
         if (valueList != null) {
@@ -312,16 +314,57 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         }
         return array;
     }
-    
+
     private boolean isNull(String s) {
         if (s == null || s.trim().isEmpty() || "null".equals(s)) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         return toString().equals(o.toString());
+    }
+
+    private void callParentRelease() {
+        if (parentJsonMap != null) {
+            parentJsonMap.set(preBuildKey, this);
+            parentJsonMap = null;
+        }
+        if (parentJsonList != null) {
+            if (preBuildIndex >= 0) {
+                parentJsonList.set(preBuildIndex, this);
+            } else {
+                parentJsonList.set(this);
+            }
+            parentJsonList = null;
+        }
+    }
+
+    private String preBuildKey;
+    private JsonMap parentJsonMap;
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonMap preBuild(String key, JsonMap parentJsonMap) {
+        this.preBuildKey = key;
+        this.parentJsonMap = parentJsonMap;
+        return this;
+    }
+
+    private int preBuildIndex;
+    private JsonList parentJsonList;
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonMap preBuild(int preBuildIndex, JsonList parentJsonList) {
+        this.preBuildIndex = preBuildIndex;
+        this.parentJsonList = parentJsonList;
+        return this;
     }
 }

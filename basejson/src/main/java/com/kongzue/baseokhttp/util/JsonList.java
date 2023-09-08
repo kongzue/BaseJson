@@ -215,24 +215,36 @@ public class JsonList extends SimpleArrayList {
     public JsonList getList(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonList() : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
+            return value == null ? new JsonList().preBuild(index, this) : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
         } catch (Exception e) {
-            return new JsonList();
+            return new JsonList().preBuild(index, this);
         }
     }
 
     public JsonMap getJsonMap(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonMap() : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
+            return value == null ? new JsonMap().preBuild(index, this) : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
         } catch (Exception e) {
-            return new JsonMap();
+            return new JsonMap().preBuild(index, this);
         }
     }
 
     public JsonList set(Object value) {
+        callParentRelease();
         super.add(value);
         return this;
+    }
+
+    public JsonList set(int index, Object value) {
+        callParentRelease();
+        super.set(index, value);
+        return this;
+    }
+
+    public void add(int index, Object value) {
+        callParentRelease();
+        super.add(index, value);
     }
 
     /**
@@ -296,7 +308,7 @@ public class JsonList extends SimpleArrayList {
                 }
             }
         }
-        return new JsonMap();
+        return new JsonMap().preBuild(-1, this);
     }
 
     public JsonListAdapter createAdapter(Context context, int layoutResId) {
@@ -310,6 +322,47 @@ public class JsonList extends SimpleArrayList {
                 events.processingData(jsonMap);
             }
         }
+        return this;
+    }
+
+    private void callParentRelease() {
+        if (parentJsonMap != null) {
+            parentJsonMap.set(preBuildKey, this);
+            parentJsonMap = null;
+        }
+        if (parentJsonList != null) {
+            if (preBuildIndex >= 0) {
+                parentJsonList.set(preBuildIndex, this);
+            } else {
+                parentJsonList.set(this);
+            }
+            parentJsonList = null;
+        }
+    }
+
+    private String preBuildKey;
+    private JsonMap parentJsonMap;
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonList preBuild(String key, JsonMap parentJsonMap) {
+        this.preBuildKey = key;
+        this.parentJsonMap = parentJsonMap;
+        return this;
+    }
+
+    private int preBuildIndex = -1;
+    private JsonList parentJsonList;
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonList preBuild(int preBuildIndex, JsonList parentJsonList) {
+        this.preBuildIndex = preBuildIndex;
+        this.parentJsonList = parentJsonList;
         return this;
     }
 }
