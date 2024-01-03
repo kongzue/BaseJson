@@ -59,8 +59,13 @@ public class JsonList extends SimpleArrayList {
                     set(o);
                 }
             }
+            if (isEmpty()) {
+                onEmpty(this, null);
+            } else {
+                onSuccess(this);
+            }
         } catch (Exception e) {
-
+            onEmpty(this, e);
         }
     }
 
@@ -85,7 +90,13 @@ public class JsonList extends SimpleArrayList {
                     set(o);
                 }
             }
+            if (isEmpty()) {
+                onEmpty(this, null);
+            } else {
+                onSuccess(this);
+            }
         } catch (Exception e) {
+            onEmpty(this, e);
         }
     }
 
@@ -364,5 +375,15 @@ public class JsonList extends SimpleArrayList {
         this.preBuildIndex = preBuildIndex;
         this.parentJsonList = parentJsonList;
         return this;
+    }
+
+    // 构建中用于复写的成功状态
+    public void onSuccess(JsonList thisJson) {
+
+    }
+
+    // 构建中用于复写的空/异常内容状态
+    public void onEmpty(JsonList thisJson, Exception e) {
+
     }
 }

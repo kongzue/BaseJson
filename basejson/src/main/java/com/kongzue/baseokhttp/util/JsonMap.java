@@ -76,8 +76,13 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                     put(key, value);
                 }
             }
+            if (isEmpty()) {
+                onEmpty(this, null);
+            } else {
+                onSuccess(this);
+            }
         } catch (Exception e) {
-
+            onEmpty(this, e);
         }
     }
 
@@ -103,8 +108,13 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                     put(key, value);
                 }
             }
+            if (isEmpty()) {
+                onEmpty(this, null);
+            } else {
+                onSuccess(this);
+            }
         } catch (Exception e) {
-
+            onEmpty(this, e);
         }
     }
 
@@ -366,5 +376,15 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         this.preBuildIndex = preBuildIndex;
         this.parentJsonList = parentJsonList;
         return this;
+    }
+
+    // 构建中用于复写的成功状态
+    public void onSuccess(JsonMap thisJson) {
+
+    }
+
+    // 构建中用于复写的空/异常内容状态
+    public void onEmpty(JsonMap thisJson, Exception e) {
+
     }
 }
