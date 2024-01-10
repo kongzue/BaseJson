@@ -2,6 +2,7 @@ package com.kongzue.baseokhttp.util.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class JsonListAdapter extends BaseAdapter implements JsonListAdapterEvent
     Context context;
     List<ViewHolder> viewHolderList = new ArrayList<>();
     JsonListAdapterEvents events;
+    boolean ifNullSetGone;
 
     public JsonListAdapter(Context context, int layoutResId, JsonList dataList) {
         this.dataList = dataList;
@@ -72,21 +74,51 @@ public class JsonListAdapter extends BaseAdapter implements JsonListAdapterEvent
             if (!isNull(tag)) {
                 String text = data.getString(tag);
                 int resId = data.getInt(tag);
+                if (tag.contains(".")) {
+                    String[] tags = tag.split("\\.");
+                    JsonMap childJsonMap = data;
+                    for (int i = 0; i < tags.length; i++) {
+                        String childTag = tags[i];
+                        if (i == tags.length - 1) {
+                            String findText = childJsonMap.getString(childTag);
+                            int findResId = childJsonMap.getInt(childTag);
+                            if (!isNull(findText)) {
+                                text = findText;
+                            }
+                            if (!isNull(findResId)) {
+                                resId = findResId;
+                            }
+                        } else {
+                            childJsonMap = childJsonMap.getJsonMap(childTag);
+                            if (childJsonMap.isEmpty()) {
+                                break;
+                            }
+                        }
+                    }
+                }
                 if (childView instanceof TextView) {
                     if (!isNull(text)) {
                         ((TextView) childView).setText(text);
+                        if (isIfNullSetGone()) childView.setVisibility(View.VISIBLE);
                     } else {
                         if (!isNull(resId)) {
                             ((TextView) childView).setText(resId);
+                            if (isIfNullSetGone()) childView.setVisibility(View.VISIBLE);
+                        } else {
+                            if (isIfNullSetGone()) childView.setVisibility(View.GONE);
                         }
                     }
                 }
                 if (childView instanceof ImageView) {
                     if (!isNull(resId)) {
                         ((ImageView) childView).setImageResource(resId);
+                        if (isIfNullSetGone()) childView.setVisibility(View.VISIBLE);
                     } else {
                         if (!isNull(text)) {
                             ((ImageView) childView).setImageURI(Uri.parse(text));
+                            if (isIfNullSetGone()) childView.setVisibility(View.VISIBLE);
+                        } else {
+                            if (isIfNullSetGone()) childView.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -100,20 +132,37 @@ public class JsonListAdapter extends BaseAdapter implements JsonListAdapterEvent
         View itemView = LayoutInflater.from(context).inflate(layoutResId, null);
         if (!dataList.isEmpty()) {
             ViewHolder childViews = new ViewHolder();
-            List<String> finsKeyArray = new ArrayList<>();
+            List<String> findKeyArray = new ArrayList<>();
             for (String key : dataList.getJsonMap(0).keySet()) {
                 View childView = itemView.findViewWithTag(key);
                 if (childView != null) {
-                    finsKeyArray.add(key);
+                    findKeyArray.add(key);
                     childViews.add(childView);
                 }
+                findAllChildKeys(findKeyArray, childViews, dataList.getJsonMap(0).getJsonMap(key), key, itemView);
             }
-            if (keys == null && !finsKeyArray.isEmpty()) {
-                keys = finsKeyArray.toArray(new String[finsKeyArray.size()]);
+            if (keys == null && !findKeyArray.isEmpty()) {
+                keys = findKeyArray.toArray(new String[findKeyArray.size()]);
             }
             itemView.setTag(VIEW_HOLDER_KEY, childViews);
         }
         return itemView;
+    }
+
+    private void findAllChildKeys(List<String> findKeyArray, ViewHolder childViews, JsonMap jsonMap, String parentKey, View rootView) {
+        if (!jsonMap.isEmpty()) {
+            for (String key : jsonMap.keySet()) {
+                String tag = parentKey + "." + key;
+                View childView = rootView.findViewWithTag(tag);
+                if (childView != null) {
+                    findKeyArray.add(tag);
+                    childViews.add(childView);
+                }
+                if (!jsonMap.getJsonMap(key).isEmpty()) {
+                    findAllChildKeys(findKeyArray, childViews, jsonMap.getJsonMap(key), key, rootView);
+                }
+            }
+        }
     }
 
     //for override —————————————————————————————————————————————————————————————————————————————————
@@ -244,6 +293,15 @@ public class JsonListAdapter extends BaseAdapter implements JsonListAdapterEvent
 
     public JsonListAdapter setEvents(JsonListAdapterEvents events) {
         this.events = events;
+        return this;
+    }
+
+    public boolean isIfNullSetGone() {
+        return ifNullSetGone;
+    }
+
+    public JsonListAdapter setIfNullSetGone(boolean ifNullSetGone) {
+        this.ifNullSetGone = ifNullSetGone;
         return this;
     }
 }

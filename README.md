@@ -20,6 +20,12 @@
 
 ## 简介
 
+BaseJson 的目标不是能让 json 解析变得多快，而是让开发者能更轻松的完成 json 到 UI 的呈现。
+
+BaseJson 直接将 json 以 Map 和 List 承载能更轻松的符合适配器、序列化的需求，也能更轻松的应对各种奇葩的、不符合规范的 json
+
+尽量减少异常的产生，尽量保证业务能够快速开发，更符合敏捷开发的需要，牺牲一定的性能我觉着也能接受吧😆
+
 - 将 Json 转换为 Map 或 List 的子类，可直接用于 Adapter，省去编写 Bean 的过程。
 - JsonMap 也可轻松与 JavaBean 互相转换。
 - 高容错设计，使用自定义 get 方法，无论如何绝不会出现空指针，哪怕类型错误，你也无须担心空指针异常；
@@ -320,6 +326,27 @@ void setData(Context context, String tag, View view, JsonMap data, int index, Js
 ```
 
 上述方法也可以通过 `adapter.setEvents(JsonListAdapterEvents)` 接口来完成设置。
+
+### 一点骚操作
+
+假设 json 原文是这样的：
+```json
+[
+  {
+    "extra_info": {
+      "content_name": "test name"
+    },
+    "data": "this is real data"
+  }
+]
+```
+要适配 `extra_info` 里的 `content_name` 给一个 TextView，在 xml 中设置对应的数据 tag，可直接设置为：
+```xml
+<TextView
+    ...
+    android:tag="extra_info.content_name"
+/>
+```
 
 ## 开源协议
 
