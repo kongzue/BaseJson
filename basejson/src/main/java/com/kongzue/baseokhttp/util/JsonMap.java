@@ -337,6 +337,10 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         return toString().equals(o.toString());
     }
 
+    public boolean equals(String key, Object value) {
+        return get(key) == value;
+    }
+
     private void callParentRelease() {
         if (parentJsonMap != null) {
             parentJsonMap.set(preBuildKey, this);

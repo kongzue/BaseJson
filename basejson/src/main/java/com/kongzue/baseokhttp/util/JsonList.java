@@ -311,6 +311,9 @@ public class JsonList extends SimpleArrayList {
     }
 
     public JsonMap findJsonMap(String key, Object value) {
+        if (isNull(key)){
+            return new JsonMap().preBuild(-1, this);
+        }
         for (int i = 0; i < size(); i++) {
             Object child = get(i);
             if (child instanceof JsonMap) {
@@ -320,6 +323,51 @@ public class JsonList extends SimpleArrayList {
             }
         }
         return new JsonMap().preBuild(-1, this);
+    }
+
+    public int findJsonMapIndex(String key, Object value) {
+        if (isNull(key)){
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            Object child = get(i);
+            if (child instanceof JsonMap) {
+                if (((JsonMap) child).getString(key).equals(String.valueOf(value))) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public JsonList findRemove(String key, Object value) {
+        if (isNull(key)){
+            return this;
+        }
+        for (int i = 0; i < size(); i++) {
+            Object child = get(i);
+            if (child instanceof JsonMap) {
+                if (((JsonMap) child).getString(key).equals(String.valueOf(value))) {
+                    remove(i);
+                    return this;
+                }
+            }
+        }
+        return this;
+    }
+
+    public JsonList remove(JsonMap data) {
+        if (data == null || data.isEmpty()) {
+            return this;
+        }
+        for (int i = 0; i < size(); i++) {
+            Object child = get(i);
+            if (data.toString().equals(child.toString())) {
+                remove(i);
+                return this;
+            }
+        }
+        return this;
     }
 
     public JsonListAdapter createAdapter(Context context, int layoutResId) {
