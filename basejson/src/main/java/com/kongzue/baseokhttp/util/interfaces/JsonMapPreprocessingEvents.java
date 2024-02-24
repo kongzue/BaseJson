@@ -23,6 +23,9 @@ public abstract class JsonMapPreprocessingEvents {
         return this;
     }
 
+    public JsonMapPreprocessingEvents() {
+    }
+
     public JsonMapPreprocessingEvents(boolean deleteWhenDataIsNull) {
         this.deleteWhenDataIsNull = deleteWhenDataIsNull;
     }
