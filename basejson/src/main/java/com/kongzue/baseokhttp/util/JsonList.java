@@ -2,12 +2,14 @@ package com.kongzue.baseokhttp.util;
 
 import org.json.JSONArray;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kongzue.baseokhttp.util.adapter.JsonListAdapter;
 import com.kongzue.baseokhttp.util.interfaces.JsonMapPreprocessingEvents;
@@ -312,7 +314,7 @@ public class JsonList extends SimpleArrayList {
     }
 
     public JsonMap findJsonMap(String key, Object value) {
-        if (isNull(key)){
+        if (isNull(key)) {
             return new JsonMap().preBuild(-1, this);
         }
         for (int i = 0; i < size(); i++) {
@@ -327,7 +329,7 @@ public class JsonList extends SimpleArrayList {
     }
 
     public int findJsonMapIndex(String key, Object value) {
-        if (isNull(key)){
+        if (isNull(key)) {
             return -1;
         }
         for (int i = 0; i < size(); i++) {
@@ -342,7 +344,7 @@ public class JsonList extends SimpleArrayList {
     }
 
     public JsonList findRemove(String key, Object value) {
-        if (isNull(key)){
+        if (isNull(key)) {
             return this;
         }
         for (int i = 0; i < size(); i++) {
@@ -376,12 +378,14 @@ public class JsonList extends SimpleArrayList {
     }
 
     public JsonList preprocessedJsonMapData(JsonMapPreprocessingEvents events) {
-        for (Object data : new CopyOnWriteArrayList<>(this)) {
+        Iterator iterator = iterator();
+        while (iterator.hasNext()) {
+            Object data = iterator.next();
             if (data instanceof JsonMap) {
                 JsonMap jsonMap = (JsonMap) data;
                 JsonMap result = events.processingData(jsonMap);
-                if (events.isDeleteWhenDataIsNull() && result==null){
-                    remove(data);
+                if (events.isDeleteWhenDataIsNull() && result == null) {
+                    iterator.remove();
                 }
             }
         }
