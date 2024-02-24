@@ -3,6 +3,7 @@ package com.kongzue.baseokhttp.util;
 import org.json.JSONArray;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.kongzue.baseokhttp.util.JsonMap.preParsing;
 
@@ -375,10 +376,13 @@ public class JsonList extends SimpleArrayList {
     }
 
     public JsonList preprocessedJsonMapData(JsonMapPreprocessingEvents events) {
-        for (Object data : this) {
+        for (Object data : new CopyOnWriteArrayList<>(this)) {
             if (data instanceof JsonMap) {
                 JsonMap jsonMap = (JsonMap) data;
-                events.processingData(jsonMap);
+                JsonMap result = events.processingData(jsonMap);
+                if (events.isDeleteWhenDataIsNull() && result==null){
+                    remove(data);
+                }
             }
         }
         return this;
