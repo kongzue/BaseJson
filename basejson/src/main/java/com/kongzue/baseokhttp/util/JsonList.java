@@ -2,6 +2,7 @@ package com.kongzue.baseokhttp.util;
 
 import org.json.JSONArray;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -248,19 +249,84 @@ public class JsonList extends SimpleArrayList {
 
     public JsonList set(Object value) {
         callParentRelease();
+        if (value instanceof JsonMap) {
+            ((JsonMap) value).setParentJsonList(this);
+        }
+        if (value instanceof JsonList) {
+            ((JsonList) value).setParentJsonList(this);
+        }
         super.add(value);
         return this;
     }
 
     public JsonList set(int index, Object value) {
         callParentRelease();
+        if (value instanceof JsonMap) {
+            ((JsonMap) value).setParentJsonList(this);
+        }
+        if (value instanceof JsonList) {
+            ((JsonList) value).setParentJsonList(this);
+        }
         super.set(index, value);
         return this;
     }
 
     public void add(int index, Object value) {
         callParentRelease();
+        if (value instanceof JsonMap) {
+            ((JsonMap) value).setParentJsonList(this);
+        }
+        if (value instanceof JsonList) {
+            ((JsonList) value).setParentJsonList(this);
+        }
         super.add(index, value);
+    }
+
+    @Override
+    public boolean add(Object value) {
+        if (value instanceof JsonMap) {
+            ((JsonMap) value).setParentJsonList(this);
+        }
+        if (value instanceof JsonList) {
+            ((JsonList) value).setParentJsonList(this);
+        }
+        return super.add(value);
+    }
+
+    @Override
+    public boolean addAll(Collection c) {
+        if (c != null) {
+            Object[] a = c.toArray();
+            for (int i = 0; i < a.length; i++) {
+                Object value = a[i];
+                if (value instanceof JsonMap) {
+                    ((JsonMap) value).setParentJsonList(this);
+                }
+                if (value instanceof JsonList) {
+                    ((JsonList) value).setParentJsonList(this);
+                }
+            }
+            return super.addAll(c);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addAll(int index, Collection c) {
+        if (c != null) {
+            Object[] a = c.toArray();
+            for (int i = 0; i < a.length; i++) {
+                Object value = a[i];
+                if (value instanceof JsonMap) {
+                    ((JsonMap) value).setParentJsonList(this);
+                }
+                if (value instanceof JsonList) {
+                    ((JsonList) value).setParentJsonList(this);
+                }
+            }
+            return super.addAll(index, c);
+        }
+        return false;
     }
 
     /**
@@ -353,6 +419,7 @@ public class JsonList extends SimpleArrayList {
             Object child = get(i);
             if (child instanceof JsonMap) {
                 if (((JsonMap) child).getString(key).equals(String.valueOf(value))) {
+                    ((JsonMap) child).cleanParent();
                     remove(i);
                     return this;
                 }
@@ -368,6 +435,22 @@ public class JsonList extends SimpleArrayList {
         for (int i = 0; i < size(); i++) {
             Object child = get(i);
             if (data.toString().equals(child.toString())) {
+                data.cleanParent();
+                remove(i);
+                return this;
+            }
+        }
+        return this;
+    }
+
+    public JsonList remove(JsonList data) {
+        if (data == null || data.isEmpty()) {
+            return this;
+        }
+        for (int i = 0; i < size(); i++) {
+            Object child = get(i);
+            if (data.toString().equals(child.toString())) {
+                data.cleanParent();
                 remove(i);
                 return this;
             }
@@ -385,6 +468,7 @@ public class JsonList extends SimpleArrayList {
             Object data = iterator.next();
             if (data instanceof JsonMap) {
                 JsonMap jsonMap = (JsonMap) data;
+                jsonMap.cleanParent();
                 JsonMap result = events.processingData(jsonMap);
                 if (events.isDeleteWhenDataIsNull() && result == null) {
                     iterator.remove();
@@ -404,15 +488,19 @@ public class JsonList extends SimpleArrayList {
         if (preCreated) {
             return;
         }
-        if (parentJsonMap != null && parentJsonMap.get(preBuildKey) != this) {
-            parentJsonMap.set(preBuildKey, this);
+        if (parentJsonMap != null && preBuildKey != null) {
+            if (parentJsonMap.get(preBuildKey) != this) {
+                parentJsonMap.set(preBuildKey, this);
+            }
             preCreated = true;
         }
-        if (parentJsonList != null && !parentJsonList.contains(this)) {
-            if (preBuildIndex >= 0) {
-                parentJsonList.set(preBuildIndex, this);
-            } else {
-                parentJsonList.set(this);
+        if (parentJsonList != null) {
+            if (!parentJsonList.contains(this)) {
+                if (preBuildIndex >= 0) {
+                    parentJsonList.set(preBuildIndex, this);
+                } else {
+                    parentJsonList.set(this);
+                }
             }
             preCreated = true;
         }
@@ -472,5 +560,11 @@ public class JsonList extends SimpleArrayList {
 
     public JsonList getParentJsonList() {
         return parentJsonList == null ? new JsonList() : parentJsonList;
+    }
+
+    public void cleanParent() {
+        parentJsonMap = null;
+        parentJsonList = null;
+        preCreated = false;
     }
 }

@@ -274,7 +274,16 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
     @Override
     public Object put(String key, Object value) {
         callParentRelease();
-        if (value == null) value = "";
+        if (value == null) {
+            value = "";
+        } else {
+            if (value instanceof JsonMap) {
+                ((JsonMap) value).setParentJsonMap(this);
+            }
+            if (value instanceof JsonList) {
+                ((JsonList) value).setParentJsonMap(this);
+            }
+        }
         return super.put(key, value);
     }
 
@@ -353,15 +362,19 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
         if (preCreated) {
             return;
         }
-        if (parentJsonMap != null && parentJsonMap.get(preBuildKey) != this) {
-            parentJsonMap.set(preBuildKey, this);
+        if (parentJsonMap != null && preBuildKey != null) {
+            if (parentJsonMap.get(preBuildKey) != this) {
+                parentJsonMap.set(preBuildKey, this);
+            }
             preCreated = true;
         }
-        if (parentJsonList != null && !parentJsonList.contains(this)) {
-            if (preBuildIndex >= 0) {
-                parentJsonList.set(preBuildIndex, this);
-            } else {
-                parentJsonList.set(this);
+        if (parentJsonList != null) {
+            if (!parentJsonList.contains(this)) {
+                if (preBuildIndex >= 0) {
+                    parentJsonList.set(preBuildIndex, this);
+                } else {
+                    parentJsonList.set(this);
+                }
             }
             preCreated = true;
         }
@@ -421,5 +434,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 
     public JsonList getParentJsonList() {
         return parentJsonList == null ? new JsonList() : parentJsonList;
+    }
+
+    public void cleanParent() {
+        parentJsonMap = null;
+        parentJsonList = null;
+        preCreated = false;
     }
 }
