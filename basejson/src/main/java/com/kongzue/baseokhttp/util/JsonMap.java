@@ -65,9 +65,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
                 if (privateParsing) {
                     if (value.startsWith("{") && value.endsWith("}")) {
                         JsonMap object = new JsonMap(value);
+                        object.setParentJsonMap(this);
                         put(key, object.isEmpty() ? value : object);
                     } else if (value.startsWith("[") && value.endsWith("]")) {
                         JsonList array = new JsonList(value);
+                        array.setParentJsonMap(this);
                         put(key, array.isEmpty() ? value : array);
                     } else {
                         put(key, value);

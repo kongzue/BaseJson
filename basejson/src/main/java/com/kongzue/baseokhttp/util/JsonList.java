@@ -51,9 +51,11 @@ public class JsonList extends SimpleArrayList {
                 if (privateParsing) {
                     if (o.startsWith("{") && o.endsWith("}")) {
                         JsonMap value = new JsonMap(o);
+                        value.setParentJsonList(this);
                         set(value.isEmpty() ? o : value);
                     } else if (o.startsWith("[") && o.endsWith("]")) {
                         JsonList value = new JsonList(o);
+                        value.setParentJsonList(this);
                         set(value.isEmpty() ? o : value);
                     } else {
                         set(o);
