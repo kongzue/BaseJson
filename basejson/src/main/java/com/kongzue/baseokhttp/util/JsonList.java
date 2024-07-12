@@ -229,7 +229,7 @@ public class JsonList extends SimpleArrayList {
     public JsonList getList(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonList().preBuild(index, this) : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)));
+            return value == null ? new JsonList().preBuild(index, this) : (value instanceof JsonList ? (JsonList) value : new JsonList(String.valueOf(value)).setParentJsonList(this));
         } catch (Exception e) {
             return new JsonList().preBuild(index, this);
         }
@@ -238,7 +238,7 @@ public class JsonList extends SimpleArrayList {
     public JsonMap getJsonMap(int index) {
         Object value = get(index);
         try {
-            return value == null ? new JsonMap().preBuild(index, this) : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)));
+            return value == null ? new JsonMap().preBuild(index, this) : (value instanceof JsonMap ? (JsonMap) value : new JsonMap(String.valueOf(value)).setParentJsonList(this));
         } catch (Exception e) {
             return new JsonMap().preBuild(index, this);
         }
@@ -392,23 +392,29 @@ public class JsonList extends SimpleArrayList {
         return this;
     }
 
+    private boolean preCreated = false;
+    private String preBuildKey;
+    private JsonMap parentJsonMap;
+    private int preBuildIndex = -1;
+    private JsonList parentJsonList;
+
     private void callParentRelease() {
-        if (parentJsonMap != null) {
-            parentJsonMap.set(preBuildKey, this);
-            parentJsonMap = null;
+        if (preCreated) {
+            return;
         }
-        if (parentJsonList != null) {
+        if (parentJsonMap != null && parentJsonMap.get(preBuildKey) != this) {
+            parentJsonMap.set(preBuildKey, this);
+            preCreated = true;
+        }
+        if (parentJsonList != null && !parentJsonList.contains(this)) {
             if (preBuildIndex >= 0) {
                 parentJsonList.set(preBuildIndex, this);
             } else {
                 parentJsonList.set(this);
             }
-            parentJsonList = null;
+            preCreated = true;
         }
     }
-
-    private String preBuildKey;
-    private JsonMap parentJsonMap;
 
     /**
      * 内部方法禁止使用
@@ -419,9 +425,6 @@ public class JsonList extends SimpleArrayList {
         this.parentJsonMap = parentJsonMap;
         return this;
     }
-
-    private int preBuildIndex = -1;
-    private JsonList parentJsonList;
 
     /**
      * 内部方法禁止使用
@@ -441,5 +444,31 @@ public class JsonList extends SimpleArrayList {
     // 构建中用于复写的空/异常内容状态
     public void onEmpty(JsonList thisJson, Exception e) {
 
+    }
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonList setParentJsonMap(JsonMap parentJsonMap) {
+        this.parentJsonMap = parentJsonMap;
+        return this;
+    }
+
+    /**
+     * 内部方法禁止使用
+     */
+    @Deprecated
+    public JsonList setParentJsonList(JsonList parentJsonList) {
+        this.parentJsonList = parentJsonList;
+        return this;
+    }
+
+    public JsonMap getParentJsonMap() {
+        return parentJsonMap == null ? new JsonMap() : parentJsonMap;
+    }
+
+    public JsonList getParentJsonList() {
+        return parentJsonList == null ? new JsonList() : parentJsonList;
     }
 }
