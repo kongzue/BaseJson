@@ -1,7 +1,5 @@
 package com.kongzue.baseokhttp.util;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Author: @Kongzue
@@ -20,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Mail: myzcxhh@live.cn
  * CreateTime: 2019/1/16 17:57
  */
-public class JsonMap extends ConcurrentHashMap<String, Object> {
+public class JsonMap extends LinkedHashMap<String, Object> {
 
     /**
      * 预解析开关
