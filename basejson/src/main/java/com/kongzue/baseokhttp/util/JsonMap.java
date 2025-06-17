@@ -294,6 +294,14 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         return getJsonObj().toString();
     }
 
+    public String toString(int indentSpaces){
+        try {
+            return getJsonObj().toString(indentSpaces);
+        }catch (Exception e){
+            return toString();
+        }
+    }
+
     public JSONObject getJsonObj() {
         JSONObject main = null;
         try {

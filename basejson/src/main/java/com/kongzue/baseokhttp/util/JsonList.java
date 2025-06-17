@@ -339,6 +339,14 @@ public class JsonList extends SimpleArrayList {
         return getJsonArray().toString();
     }
 
+    public String toString(int indentSpaces){
+        try {
+            return getJsonArray().toString(indentSpaces);
+        }catch (Exception e){
+            return toString();
+        }
+    }
+
     public JSONArray getJsonArray() {
         JSONArray main = null;
         try {
