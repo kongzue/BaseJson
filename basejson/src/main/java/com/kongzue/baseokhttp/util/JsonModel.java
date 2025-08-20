@@ -65,9 +65,7 @@ public class JsonModel extends JsonMap {
                     try {
                         JsonModel nested = (JsonModel) type.getDeclaredConstructor().newInstance();
                         JsonMap source = getJsonMap(key);
-                        if (source != null) {
-                            nested.copyFrom(source);
-                        }
+                        nested.copyFrom(source);
                         value = nested;
                     } catch (Exception e) {
                         if (e instanceof NoSuchMethodException) {
@@ -122,9 +120,7 @@ public class JsonModel extends JsonMap {
                     try {
                         JsonModel nested = (JsonModel) type.getDeclaredConstructor().newInstance();
                         JsonMap source = data.getJsonMap(key);
-                        if (source != null) {
-                            nested.copyFrom(source);
-                        }
+                        nested.copyFrom(source);
                         value = nested;
                     } catch (Exception e) {
                         if (e instanceof NoSuchMethodException) {
@@ -132,6 +128,9 @@ public class JsonModel extends JsonMap {
                         }
                         e.printStackTrace();
                     }
+                } else {
+                    JsonMap source = data.getJsonMap(key);
+                    value = parse(type, source);
                 }
 
                 if (value != null) {
