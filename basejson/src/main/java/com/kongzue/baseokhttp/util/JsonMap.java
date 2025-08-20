@@ -40,10 +40,12 @@ public class JsonMap extends LinkedHashMap<String, Object> {
      */
     public JsonMap() {
         privateParsing = preParsing;
+        onCreate();
     }
 
     public JsonMap(boolean preParsing) {
         privateParsing = preParsing;
+        onCreate();
     }
 
     /**
@@ -83,6 +85,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         } catch (Exception e) {
             onEmpty(this, e);
         }
+        onCreate();
     }
 
     public JsonMap(String jsonStr, boolean preParsing) {
@@ -115,6 +118,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         } catch (Exception e) {
             onEmpty(this, e);
         }
+        onCreate();
     }
 
     /**
@@ -129,6 +133,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
             Object value = map.get(key);
             set(key, value);
         }
+        onCreate();
     }
 
     public JsonMap(Map map, boolean preParsing) {
@@ -138,6 +143,12 @@ public class JsonMap extends LinkedHashMap<String, Object> {
             Object value = map.get(key);
             set(key, value);
         }
+        onCreate();
+    }
+
+    //for override
+    protected void onCreate(){
+
     }
 
     /**
