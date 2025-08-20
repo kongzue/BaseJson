@@ -3,8 +3,32 @@ package com.kongzue.baseokhttp.util;
 import com.kongzue.baseokhttp.util.interfaces.JsonValue;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 public class JsonModel extends JsonMap{
+
+    public JsonModel() {
+    }
+
+    public JsonModel(boolean preParsing) {
+        super(preParsing);
+    }
+
+    public JsonModel(String jsonStr) {
+        super(jsonStr);
+    }
+
+    public JsonModel(String jsonStr, boolean preParsing) {
+        super(jsonStr, preParsing);
+    }
+
+    public JsonModel(Map map) {
+        super(map);
+    }
+
+    public JsonModel(Map map, boolean preParsing) {
+        super(map, preParsing);
+    }
 
     @Override
     protected void onCreate() {

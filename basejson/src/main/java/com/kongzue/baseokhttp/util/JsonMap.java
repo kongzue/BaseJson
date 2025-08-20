@@ -128,22 +128,12 @@ public class JsonMap extends LinkedHashMap<String, Object> {
      */
     public JsonMap(Map map) {
         privateParsing = preParsing;
-        Set<String> keys = map.keySet();
-        for (String key : keys) {
-            Object value = map.get(key);
-            set(key, value);
-        }
-        onCreate();
+        copyFrom(map);
     }
 
     public JsonMap(Map map, boolean preParsing) {
         privateParsing = preParsing;
-        Set<String> keys = map.keySet();
-        for (String key : keys) {
-            Object value = map.get(key);
-            set(key, value);
-        }
-        onCreate();
+        copyFrom(map);
     }
 
     //for override
@@ -456,5 +446,15 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         parentJsonMap = null;
         parentJsonList = null;
         preCreated = false;
+    }
+
+    public JsonMap copyFrom(Map map) {
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            Object value = map.get(key);
+            set(key, value);
+        }
+        onCreate();
+        return this;
     }
 }
