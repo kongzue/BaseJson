@@ -5,7 +5,7 @@ import com.kongzue.baseokhttp.util.interfaces.JsonValue;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public class JsonModel extends JsonMap{
+public class JsonModel extends JsonMap {
 
     public JsonModel() {
     }
@@ -59,6 +59,16 @@ public class JsonModel extends JsonMap{
                     value = getJsonMap(key);
                 } else if (type == JsonList.class) {
                     value = getList(key);
+                } else if (JsonModel.class.isAssignableFrom(type)) {
+                    try {
+                        JsonModel nested = (JsonModel) type.getDeclaredConstructor().newInstance();
+                        JsonMap source = getJsonMap(key);
+                        if (source != null) {
+                            nested.copyFrom(source);
+                        }
+                        value = nested;
+                    } catch (Exception e) {
+                    }
                 }
 
                 if (value != null) {
