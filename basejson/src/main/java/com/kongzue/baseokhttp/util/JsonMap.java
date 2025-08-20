@@ -137,7 +137,7 @@ public class JsonMap extends LinkedHashMap<String, Object> {
     }
 
     //for override
-    protected void onCreate(){
+    public void onCreate() {
 
     }
 
@@ -295,10 +295,10 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         return getJsonObj().toString();
     }
 
-    public String toString(int indentSpaces){
+    public String toString(int indentSpaces) {
         try {
             return getJsonObj().toString(indentSpaces);
-        }catch (Exception e){
+        } catch (Exception e) {
             return toString();
         }
     }
@@ -456,5 +456,9 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         }
         onCreate();
         return this;
+    }
+
+    public <T> T toModel(Class<T> targetClass) {
+        return JsonModel.parse(targetClass, this);
     }
 }

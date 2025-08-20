@@ -33,9 +33,8 @@ public class JsonModel extends JsonMap {
     }
 
     @Override
-    protected void onCreate() {
+    public void onCreate() {
         super.onCreate();
-        System.out.println(super.toString());
         Class<?> clazz = this.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             JsonValue annotation = field.getAnnotation(JsonValue.class);
@@ -71,7 +70,9 @@ public class JsonModel extends JsonMap {
                         }
                         value = nested;
                     } catch (Exception e) {
-                        if ( e instanceof NoSuchMethodException) Log.e(">>>", "JsonModel 初始化时失败！" + type +"没有空参构造方法或不是非静态的内部类。" );
+                        if (e instanceof NoSuchMethodException) {
+                            Log.e(">>>", "JsonModel 初始化时失败！" + type + "没有空参构造方法或不是非静态的内部类。");
+                        }
                         e.printStackTrace();
                     }
                 }
@@ -85,6 +86,62 @@ public class JsonModel extends JsonMap {
                     }
                 }
             }
+        }
+    }
+
+    public static <T> T parse(Class<T> targetClass, JsonMap data) {
+        try {
+            T instance = targetClass.getDeclaredConstructor().newInstance();
+            for (Field field : targetClass.getDeclaredFields()) {
+                JsonValue annotation = field.getAnnotation(JsonValue.class);
+                if (annotation == null) continue;
+
+                String key = annotation.value();
+                Class<?> type = field.getType();
+                Object value = null;
+
+                if (type == String.class) {
+                    value = data.getString(key);
+                } else if (type == int.class || type == Integer.class) {
+                    value = data.getInt(key);
+                } else if (type == boolean.class || type == Boolean.class) {
+                    value = data.getBoolean(key);
+                } else if (type == double.class || type == Double.class) {
+                    value = data.getDouble(key);
+                } else if (type == long.class || type == Long.class) {
+                    value = data.getLong(key);
+                } else if (type == short.class || type == Short.class) {
+                    value = data.getShort(key);
+                } else if (type == float.class || type == Float.class) {
+                    value = data.getFloat(key);
+                } else if (type == JsonMap.class) {
+                    value = data.getJsonMap(key);
+                } else if (type == JsonList.class) {
+                    value = data.getList(key);
+                } else if (JsonModel.class.isAssignableFrom(type)) {
+                    try {
+                        JsonModel nested = (JsonModel) type.getDeclaredConstructor().newInstance();
+                        JsonMap source = data.getJsonMap(key);
+                        if (source != null) {
+                            nested.copyFrom(source);
+                        }
+                        value = nested;
+                    } catch (Exception e) {
+                        if (e instanceof NoSuchMethodException) {
+                            Log.e(">>>", "JsonModel 初始化时失败！" + type + "没有空参构造方法或不是非静态的内部类。");
+                        }
+                        e.printStackTrace();
+                    }
+                }
+
+                if (value != null) {
+                    field.setAccessible(true);
+                    field.set(instance, value);
+                }
+            }
+            return instance;
+        } catch (Exception e) {
+            throw new RuntimeException("解析失败: " + targetClass.getName(), e);
         }
     }
 }
