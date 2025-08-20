@@ -1,5 +1,7 @@
 package com.kongzue.baseokhttp.util;
 
+import android.util.Log;
+
 import com.kongzue.baseokhttp.util.interfaces.JsonValue;
 
 import java.lang.reflect.Field;
@@ -33,6 +35,7 @@ public class JsonModel extends JsonMap {
     @Override
     protected void onCreate() {
         super.onCreate();
+        System.out.println(super.toString());
         Class<?> clazz = this.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             JsonValue annotation = field.getAnnotation(JsonValue.class);
@@ -68,6 +71,8 @@ public class JsonModel extends JsonMap {
                         }
                         value = nested;
                     } catch (Exception e) {
+                        if ( e instanceof NoSuchMethodException) Log.e(">>>", "JsonModel 初始化时失败！" + type +"没有空参构造方法或不是非静态的内部类。" );
+                        e.printStackTrace();
                     }
                 }
 
