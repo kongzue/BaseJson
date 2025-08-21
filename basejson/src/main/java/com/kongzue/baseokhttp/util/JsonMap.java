@@ -1,5 +1,7 @@
 package com.kongzue.baseokhttp.util;
 
+import com.kongzue.baseokhttp.util.util.JsonBeanUtil;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -458,7 +460,11 @@ public class JsonMap extends LinkedHashMap<String, Object> {
         return this;
     }
 
-    public <T> T toModel(Class<T> targetClass) {
-        return JsonModel.parse(targetClass, this);
+    public <T> T toBean(Class<T> targetClass) {
+        return JsonBeanUtil.fromJsonMap(this, targetClass, JsonBeanUtil.Mode.ANNOTATION);
+    }
+
+    public static JsonMap toJsonMap(Object bean) {
+        return JsonBeanUtil.toJsonMap(bean, JsonBeanUtil.Mode.ANNOTATION);
     }
 }

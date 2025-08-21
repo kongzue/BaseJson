@@ -151,7 +151,7 @@ JsonMap result = jsonList.findJsonMap("key", "value");
 // result 不会为 null，若需要判空请使用 result.isEmpty()
 
 //查找某个符合 key=value 的结果，并对其内容进行修改：
-jsonList.findJsonMap("key", "value")
+        jsonList.findJsonMap("key", "value")
         .set("age", 3);
 ```
 
@@ -161,14 +161,14 @@ jsonList.findJsonMap("key", "value")
 
 ```java
 JsonList list = ...;
-list.preprocessedJsonMapData(new JsonMapPreprocessingEvents() {
-    @Override
-    public JsonMap processingData(JsonMap originData) {
+        list.preprocessedJsonMapData(new JsonMapPreprocessingEvents() {
+@Override
+public JsonMap processingData(JsonMap originData) {
         originData.set("goods_price_str", "¥" + originData.getString("goods_price"));
         return originData;
-    }
-});
-System.out.println(list.toString());
+        }
+        });
+        System.out.println(list.toString());
 ```
 
 上述代码会将 JsonList 中每个  JsonMap 的 `goods_price` 字段读取，并设置一个新的字段：`goods_price_str` ，使其值等于 "¥" + `goods_price`。
@@ -217,7 +217,48 @@ JsonMap data = ...;
 String jsonObj = data.toString();
 ```
 
-## JsonMap 与 JavaBean 的互相转换
+## Bean 支持
+
+BaseJson 支持将 json 转换为 JavaBean 对象，只需要在 JavaBean 对象中使用 ` @JsonValue(key)` 注解标注与 json 对应字段，然后使用 `jsonMap.toBean(Bean.class)` 进行转换。
+
+例如如下的 `SentencesBean` ：
+
+```java
+public class SentencesBean{
+
+    @JsonValue("code")
+    private int code;
+
+    @JsonValue("message")
+    private String message;
+
+    @JsonValue("result")
+    private ResultModel result;
+
+    @Override
+    public String toString() {
+        return "SentencesBean{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", result=" + result +
+                '}';
+    }
+}
+```
+
+将 jsonMap 转换为 Bean：
+
+```java
+SentencesBean bean = jsonMap.toBean(SentencesBean.class);
+```
+
+要将 Bean 反向转为 JsonMap，可以使用：
+
+```java
+JsonMap jsonData = JsonMap.toJsonMap(bean);
+```
+
+## JavaBean 支持(旧版)
 
 使用 JsonBean 工具类，实现 JavaBean 与 JsonMap 之间的互相转换，这里使用了反射技术。
 
@@ -246,6 +287,10 @@ JsonMap userJson = JsonBean.setBean(user);
 ```
 
 转换后即可获得 JsonMap 对象。
+
+> **Tips:**
+>
+> 旧版方案是直接通过查找 json 中变量对应的 set/get 方法调用赋值或者获取值的，因此它需要配置 Bean 的反混淆以避免方法名因混淆导致无法调用。
 
 ## 由 JsonList 直接生成适配器 Adapter
 
@@ -330,6 +375,7 @@ void setData(Context context, String tag, View view, JsonMap data, int index, Js
 ### 一点骚操作
 
 假设 json 原文是这样的：
+
 ```json
 [
   {
@@ -340,7 +386,9 @@ void setData(Context context, String tag, View view, JsonMap data, int index, Js
   }
 ]
 ```
+
 要适配 `extra_info` 里的 `content_name` 给一个 TextView，在 xml 中设置对应的数据 tag，可直接设置为：
+
 ```xml
 <TextView
     ...
